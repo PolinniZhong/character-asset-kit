@@ -2,6 +2,34 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## v1.2.1（2026-09-22）— 方舟（ark）真机验证修复：图生图、零水印、错误分类、密钥候选
+
+v1.2 的五个 HTTP 适配器只有离线 mock 测试。这一版**第一次持密钥把 `ark` 打通**（`doubao-seedream-5-0-lite-260128`，标准格 `1773x2364`），
+一跑就掉出**四条静态检查抓不到的缺陷**。逐条修复并补了**证伪过的**用例（把 bug 放回去会红）：
+
+- **① 图生图端点错（阻塞级）**：`ark` 原先和 OpenAI 共用 multipart `/images/edits`。实测方舟**没有这个端点**（curl 404），
+  且该端点**只收 JSON**——multipart（字段名 `image`、`image[0]` 都试过）一律回 `we could not parse the JSON body`。
+  新增 `edit_as_json` 开关：方舟图生图改走 `/images/generations` + JSON `image` 字段（data URI，单图字符串／多图数组）。
+  ⇒ **不修则门径里所有"以参考图生成"的步骤（G2 之后几乎每一步）在方舟上全废。**
+- **② 零水印红线被破（阻塞级）**：`ark` 原负载不含 `watermark`，而方舟**默认 `true`** ⇒「AI生成」水印**烧进像素**，
+  直接违反硬约束 4。同提示词对照实测：`true` 右下角 5,614 个痕迹像素 / `false` 163 个（增强后 `true` 可读出「AI生成」）。
+  JSON 类提供商现在**始终显式发 `watermark: false`**。
+- **③ 错误分类误导**：服务端提前关连接（如打了不存在的端点）会以 `BrokenPipeError` 落进 `except URLError`，
+  旧文案一律写「网络不可达」⇒ 拿着 404 的病因去查网络。现按异常类型分流，`BrokenPipeError/ConnectionResetError`
+  明确报「连接被服务端提前关闭……先核对请求地址/负载格式，不要按网络问题排查」。
+- **④ 密钥名硬编码**：`key_env` 原为单字符串 `ARK_API_KEY`，而 DSH/豆包侧按模型 id 推导的名字是
+  `DOUBAO_SEEDREAM_5_0_PRO_260628_API_KEY` ⇒ 用户配了 key 仍报"缺少环境变量"。
+  改为**候选表**（字符串或 list 均支持），按序取第一个有值的。
+- **顺带两处口径修正**：`ark` 的 `default_model` 由 `None`（必须显式传）改为 `doubao-seedream-5-0-pro-260628`（与 Skill 默认一致）；
+  docstring 里"`--model` 传推理端点 id"更正为**传模型 id**（实测模型名可用，旧注释误导）。
+- **文档**：`references/runtime-portability.md` 提供商矩阵拆分"方舟"与"自建/兼容网关"两行，并补一段方舟实测事实
+  （JSON-only、无 `/images/edits`、水印默认 true、密钥候选、尺寸区间 3,686,400–16,777,216 px、标准格 1773×2364 可直接用）。
+- **测试**：`tests/test_generation.py` 20 → **28 个用例**（新增 ark 图生图 JSON 形状、多图数组、dry-run 不发请求、
+  密钥候选回落、gen/edit 两处 watermark 断言、BrokenPipe 文案回归）；全仓 **43 个测试全绿**。
+- **验证边界（如实声明）**：本轮真机只覆盖 **ark**；`openai`/`google`/`openrouter`/`custom` **仍未持密钥验证**。
+  另注：本轮实测**未重现**取景漂移是否与模型相关——同一条提示词在 lite 上仍是"头部占满画幅"，
+  说明**取景由提示词决定、与 ark 通路无关**（该现象在 seedream_5.0_pro 上同样存在，见 prompt-rewrite-rules §配方 A）。
+
 ## v1.2（2026-09-22）— 多运行时生图支持（生产线与出图解耦）
 
 - **定名「千面工坊 · 角色资产生产线」**（slogan：千面如一）；技术名/仓库名/frontmatter `name` 仍为 `character-asset-kit`（标识符不改，避免破坏 Skill 发现与引用），中文名进 SKILL.md 标题与 description 触发词、双语 README。

@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import sys
 import tempfile
 import unittest
 import urllib.error
@@ -235,10 +236,130 @@ class GenerateCLITest(unittest.TestCase):
         rc = gen.main(["--provider", "openai", "--prompt", "x", "--out", self.out])
         self.assertEqual(rc, 2)
 
-    def test_ark_requires_model(self):
+    def test_ark_defaults_to_doubao_model(self):
+        """2026-09-22 反转：ark 原先无默认模型（必须显式 --model），现默认豆包 Pro（与 Skill 一致）。"""
+        self.fake()
         os.environ["ARK_API_KEY"] = "ark-key"
-        rc = gen.main(["--provider", "ark", "--prompt", "x", "--out", self.out])
-        self.assertEqual(rc, 2)
+        rc = gen.main(["--provider", "ark", "--prompt", "x",
+                       "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 0)
+        req = self.calls[0]
+        self.assertTrue(req.full_url.endswith("/images/generations"))
+        payload = json.loads(req.data.decode())
+        self.assertEqual(payload["model"], "doubao-seedream-5-0-pro-260628")
+        self.assertEqual(payload["size"], "2560x1440")
+
+    def test_ark_accepts_cli_model_override(self):
+        self.fake()
+        os.environ["ARK_API_KEY"] = "ark-key"
+        rc = gen.main(["--provider", "ark", "--model", "doubao-seedream-5-0-lite-260128",
+                       "--prompt", "x", "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 0)
+        self.assertEqual(json.loads(self.calls[0].data.decode())["model"],
+                         "doubao-seedream-5-0-lite-260128")
+
+    # ---------- Ark 图生图（2026-09-22 真机实测后修复）----------
+    def test_ark_edit_uses_json_image_field_not_edits_endpoint(self):
+        """证伪点：ark 曾走 /images/edits + multipart ⇒ 实测 404 且服务端拒收 multipart。
+
+        现在必须是 /images/generations + JSON `image`（data URI）。退回旧行为即为红。
+        """
+        self.fake()
+        os.environ["ARK_API_KEY"] = "ark-key"
+        rc = gen.main(["--provider", "ark", "--mode", "edit",
+                       "--prompt", "expr: angry", "--ref", self.refs[0],
+                       "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 0)
+        req = self.calls[0]
+        self.assertTrue(req.full_url.endswith("/images/generations"))
+        self.assertNotIn("images/edits", req.full_url)
+        self.assertEqual(req.headers["Content-type"], "application/json")
+        payload = json.loads(req.data.decode())
+        self.assertEqual(payload["size"], "2560x1440")
+        self.assertIsInstance(payload["image"], str)
+        self.assertTrue(payload["image"].startswith("data:image/png;base64,"))
+
+    def test_ark_edit_multi_ref_is_json_array(self):
+        self.fake()
+        os.environ["ARK_API_KEY"] = "ark-key"
+        rc = gen.main(["--provider", "ark", "--mode", "edit", "--prompt", "x",
+                       "--ref", self.refs[0], "--ref", self.refs[1],
+                       "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 0)
+        images = json.loads(self.calls[0].data.decode())["image"]
+        self.assertIsInstance(images, list)
+        self.assertEqual(len(images), 2)
+        self.assertTrue(all(s.startswith("data:image/") for s in images))
+
+    def test_ark_edit_dry_run_makes_no_call(self):
+        def must_not_call(*a, **k):
+            raise AssertionError("dry-run 不得发请求")
+        gen._urlopen = must_not_call
+        rc = gen.main(["--provider", "ark", "--mode", "edit", "--prompt", "x",
+                       "--ref", self.refs[0], "--size", "2560x1440",
+                       "--out", self.out, "--dry-run"])
+        self.assertEqual(rc, 0)
+
+    def test_ark_key_candidate_fallback(self):
+        """证伪点：key 名曾硬编码 `ARK_API_KEY` ⇒ 只有豆包推导名的用户取不到 key。"""
+        self.fake()
+        os.environ.pop("ARK_API_KEY", None)
+        os.environ["DOUBAO_SEEDREAM_5_0_PRO_260628_API_KEY"] = "doubao-derived-key"
+        try:
+            rc = gen.main(["--provider", "ark", "--prompt", "x",
+                           "--size", "2560x1440", "--out", self.out])
+            self.assertEqual(rc, 0)
+            self.assertEqual(self.calls[0].headers["Authorization"], "Bearer doubao-derived-key")
+        finally:
+            os.environ.pop("DOUBAO_SEEDREAM_5_0_PRO_260628_API_KEY", None)
+
+    # ---------- 零水印红线（2026-09-22 真机实测后修复）----------
+    def test_ark_gen_payload_disables_watermark(self):
+        """证伪点：ark 不传 watermark 时服务端默认 true，水印烧进像素（违反硬约束 4）。"""
+        self.fake()
+        os.environ["ARK_API_KEY"] = "ark-key"
+        rc = gen.main(["--provider", "ark", "--prompt", "x",
+                       "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 0)
+        self.assertIs(json.loads(self.calls[0].data.decode())["watermark"], False)
+
+    def test_ark_edit_payload_disables_watermark(self):
+        self.fake()
+        os.environ["ARK_API_KEY"] = "ark-key"
+        rc = gen.main(["--provider", "ark", "--mode", "edit", "--prompt", "x",
+                       "--ref", self.refs[0], "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 0)
+        self.assertIs(json.loads(self.calls[0].data.decode())["watermark"], False)
+
+    # ---------- 错误分类（2026-09-22 真机实测后修复）----------
+    def test_broken_pipe_is_not_reported_as_network(self):
+        """证伪点：BrokenPipeError 曾被一律写成「网络不可达」，把 404 的病因引向网络排查。
+
+        报文同时断言文案不再提「网络不可达」——只断言退出码会漏掉这处回归。
+        """
+        err = urllib.error.URLError(BrokenPipeError(32, "Broken pipe"))
+        self.fake(exc_seq=(err, err, err))
+        os.environ["ARK_API_KEY"] = "ark-key"
+        capture = io.StringIO()
+        orig_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            rc = gen.main(["--provider", "ark", "--prompt", "x",
+                           "--size", "2560x1440", "--out", self.out])
+        finally:
+            sys.stderr = orig_stderr
+        msg = capture.getvalue()
+        self.assertEqual(rc, 1)
+        self.assertNotIn("网络不可达", msg)
+        self.assertIn("提前关闭", msg)
+
+    def test_pure_network_error_still_classified(self):
+        err = urllib.error.URLError(OSError(60, "Operation timed out"))
+        self.fake(exc_seq=(err, err, err))
+        os.environ["ARK_API_KEY"] = "ark-key"
+        rc = gen.main(["--provider", "ark", "--prompt", "x",
+                       "--size", "2560x1440", "--out", self.out])
+        self.assertEqual(rc, 1)
 
     def test_doubao_guides_to_host_tools(self):
         rc = gen.main(["--provider", "doubao", "--prompt", "x", "--out", self.out])

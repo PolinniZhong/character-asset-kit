@@ -21,10 +21,26 @@
 | OpenRouter 统一网关（推荐的非豆包入口） | `kit_generate.py --provider openrouter`，一把 key 触达 Gemini / Seedream / GPT-Image / Recraft / Flux 等约 30 个模型 | 取决于具体模型（选多模态图像模型） |
 | Google Gemini | `--provider google`（`generateContent`，默认 `gemini-2.5-flash-image`） | 强；2.5-flash 参考图上限 3，gemini-3 族 14 |
 | OpenAI 官方 | `--provider openai`（`/images/generations`、`/images/edits`，默认 `gpt-image-2.5-flare`） | multipart，单图字段 `image`、多图重复 `image[]`，上限 16 |
-| 火山方舟 / 自建网关 | `--provider ark` / `--provider custom --base-url …`（OpenAI Images 兼容） | 看网关后面的模型 |
+| 火山方舟（豆包自家 API） | `--provider ark`（`/images/generations`；默认 `doubao-seedream-5-0-pro-260628`，可 `--model` 换 lite/4.5 等） | **JSON `image` 字段**（data URI），单图字符串、多图数组；**没有 `/images/edits`** |
+| 自建 / 兼容网关 | `--provider custom --base-url …`（OpenAI Images 兼容） | 多为 multipart `/images/edits`，看网关实现 |
 | 本地 CUDA（ComfyUI / Flux / SD） | 自包命令行，契约见 §7 | 取决于工作流（IP-Adapter / Flux Kontext 等） |
 
 > OpenAI 的图像模型权重不开放，**不能在本地 CUDA 上跑**；本地 CUDA 是开源权重路线，走 §7 自包。
+
+> ★ **方舟（ark）已做真机验证（2026-09-22，`doubao-seedream-5-0-lite-260128`）** —— 此前是"照文档写、未持密钥验证"，
+> 一跑就掉出四条静态检查抓不到的问题，都已在 `kit_generate.py` 修掉并补了证伪用例：
+> ① **只收 JSON**：multipart（字段名 `image` 或 `image[0]` 都试过）一律回 `we could not parse the JSON body`；
+> 图生图必须走 `/images/generations` + `image` 字段（data URI，单图字符串／多图数组）。
+> ② **端点只有 `/images/generations`**：`/images/edits` 实测 **404**；打错端点时服务端在收完请求体前关连接，
+> 表现为 `BrokenPipeError`（脚本现已把它与"网络不可达"**分开报**，否则会被引去查网络）。
+> ③ **不传 `watermark` 时服务端默认 `true`，水印会烧进像素**（同提示词对照：`true` 右下角 5,614 个痕迹像素 / `false` 163 个，
+> 增强后 `true` 可读出「AI生成」）。与"资产本体零水印"红线直接冲突 ⇒ 脚本对 JSON 类提供商**始终显式发 `watermark: false`**。
+> ⚠️ **兼容网关不保证认这个字段**，接入新网关时按 §4 第 5 条做一次零文字目检。
+> ④ **key 名按模型可换**：`ARK_API_KEY` 与由模型 id 推导的 `DOUBAO_SEEDREAM_5_0_PRO_260628_API_KEY` 都认
+> （脚本按候选表取第一个有值的，换模型不改脚本）。
+> ⑤ **尺寸 `passthrough`（原样发）**：实测该模型族下限 **3,686,400 px**、上限 **16,777,216 px**；
+> 本线标准格 `1773x2364`＝4,191,372 px **在区间内可直接用**，无需降采样。
+> ⑥ `--model` 收**模型 id**（如 `doubao-seedream-5-0-lite-260128`），不是推理端点 id。
 > 模型名是配置项：`--model` ＞ 环境变量 `<PROVIDER>_IMAGE_MODEL` ＞ 内置默认。2026-09 时 OpenAI 线上为
 > `gpt-image-2.5-flare`（默认向，快）/ `gpt-image-2.5-sunburst`（编辑优先），另有 gpt-image-2 / 1.5 / 1；
 > OpenRouter 用完整 id（如 `bytedance-seed/seedream-4.5`、`openai/gpt-image-2`）。

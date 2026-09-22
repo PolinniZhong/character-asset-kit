@@ -6,14 +6,15 @@ skill 的确定性脚本不绑定任何生图厂商：
 - 豆包运行时：由宿主 image_gen/image_edit 工具出图（不经过本脚本，--provider doubao 会给出指引）；
 - 其他运行时：本脚本直连多家图像 API，把 raw 落到 99_过程稿/，再由 kit_standard_cell 抠图落格。
 
-provider（2026-09-22 依据公开 skill/API 文档实现，未持密钥做真机验证；--dry-run 可离线核对请求）：
+provider（2026-09-22 依据公开 skill/API 文档实现；**ark 已持密钥做真机验证**，其余仍未真机验证；--dry-run 可离线核对请求）：
   openai      OpenAI Images（/images/generations、/images/edits；默认 gpt-image-2.5-flare）
   google      Gemini 图像（generateContent；默认 gemini-2.5-flash-image，多参考图强）
   openrouter  OpenRouter Images 统一网关（一把 key 触达 Gemini/Seedream/GPT/Recraft/Flux 等）
-  ark         火山方舟 OpenAI 兼容网关（--model 传推理端点）
+  ark         火山方舟（/images/generations；--model 传模型 id；图生图走 JSON `image` 字段）
   custom      任意 OpenAI Images 兼容端点（--base-url 或 OPENAI_BASE_URL）
 
 模型解析优先级：--model ＞ 环境变量 <PROVIDER>_IMAGE_MODEL ＞ 内置默认。
+key 解析：`key_env` 可为字符串或**候选列表**，按序取第一个有值的（换模型不改脚本）。
 纪律：一次调用只出 1 张（要多张多次调用）；raw 先进 99_过程稿/；不拼板、不做审美判断。
 退出码：0 成功；1 服务商/网络失败（429/5xx 自动重试 2 次，4xx 不重试）；2 用法/配置错误。
 仅依赖标准库；Pillow 用于回读校验与非 PNG 返回归一为 PNG（本生产线落格只收 PNG）。
@@ -62,11 +63,18 @@ PROVIDERS = {
     "ark": {
         "kind": "openai-images",
         "base_url": "https://ark.cn-beijing.volces.com/api/v3",
-        "key_env": "ARK_API_KEY",
+        # ★ 2026-09-22 真机实测（此前四条均为静态检查抓不到的问题）：
+        #   ① 方舟该端点**只收 JSON** —— multipart 一律回 "we could not parse the JSON body"；
+        #   ② 图生图也走 /images/generations 的 `image` 字段（data URI 或 URL），
+        #      **没有 /images/edits**（curl 实测 404）；
+        #   ③ 不传 `watermark` 时服务端默认 **true**，水印会烧进像素（违反生产线"零水印"红线）；
+        #   ④ key 名按模型可换，故 `key_env` 为**候选表**（list），按序取第一个有值的。
+        "key_env": ["ARK_API_KEY", "DOUBAO_SEEDREAM_5_0_PRO_260628_API_KEY"],
         "model_env": "ARK_IMAGE_MODEL",
-        "default_model": None,        # 推理端点 id，必须显式
+        "default_model": "doubao-seedream-5-0-pro-260628",   # 与 Skill 默认模型一致
         "size_mode": "passthrough",
         "ref_limit": None,
+        "edit_as_json": True,         # 图生图走 JSON + data URI（见 build_request）
     },
     "custom": {
         "kind": "openai-images",
@@ -189,13 +197,36 @@ def build_request(cfg, provider_name, model, args):
         if not base:
             raise ValueError("custom 提供商需要 --base-url 或环境变量 OPENAI_BASE_URL")
         headers = {"Authorization": f"Bearer {args.api_key}"}
+        # 资产本体零水印是生产线红线（SKILL 硬约束 4）。多数兼容网关认 OpenAI 的
+        # `watermark` 字段；**不认的服务商可能忽略它** —— 方舟实测认（不传即默认 true）。
+        watermark = {"watermark": False}
         if args.mode == "gen":
             url = f"{base.rstrip('/')}/images/generations"
-            payload = {"model": model, "prompt": args.prompt, "size": size_send, "n": 1}
+            payload = {"model": model, "prompt": args.prompt, "size": size_send, "n": 1, **watermark}
             if args.quality:
                 payload["quality"] = args.quality
             headers["Content-Type"] = "application/json"
             return url, headers, json.dumps(payload).encode("utf-8"), payload
+
+        if cfg.get("edit_as_json"):
+            # 方舟：图生图**没有 /images/edits**，走 /images/generations + JSON `image`（data URI）。
+            # 实测 multipart 会被拒（"we could not parse the JSON body"）。
+            url = f"{base.rstrip('/')}/images/generations"
+            images = []
+            ref_names = []
+            for p in args.ref:
+                ctype, b64 = _b64_file(p)
+                images.append(f"data:{ctype};base64,{b64}")
+                ref_names.append(os.path.basename(p))
+            payload = {"model": model, "prompt": args.prompt, "size": size_send, "n": 1,
+                       "image": images[0] if len(images) == 1 else images, **watermark}
+            if args.quality:
+                payload["quality"] = args.quality
+            headers["Content-Type"] = "application/json"
+            summary = {"endpoint": url, "json_fields": sorted(payload.keys()),
+                       "image_field": "image", "files": ref_names}
+            return url, headers, json.dumps(payload).encode("utf-8"), summary
+
         field = "image" if len(args.ref) == 1 else "image[]"
         url = f"{base.rstrip('/')}/images/edits"
         ctype, body = _multipart(
@@ -342,9 +373,17 @@ def main(argv=None):
     except ValueError as exc:
         return die(str(exc))
 
-    args.api_key = os.environ.get(cfg["key_env"])
+    # key 名可为字符串或候选列表（换模型不改脚本）；按序取第一个有值的。
+    key_names = cfg["key_env"]
+    if isinstance(key_names, str):
+        key_names = [key_names]
+    args.api_key = ""
+    for name in key_names:
+        if os.environ.get(name):
+            args.api_key = os.environ[name]
+            break
     if not args.api_key and not args.dry_run:
-        return die(f"缺少环境变量 {cfg['key_env']}（key 只从环境读，不写进档案/命令记录）")
+        return die(f"缺少环境变量 {' 或 '.join(key_names)}（key 只从环境读，不写进档案/命令记录）")
 
     try:
         model = resolve_model(cfg, args.provider, args.model)
@@ -367,7 +406,17 @@ def main(argv=None):
         detail = exc.read().decode("utf-8", "replace")[:800]
         return die(f"HTTP {exc.code} {exc.reason}\n{detail}", 1)
     except urllib.error.URLError as exc:
-        return die(f"网络不可达：{exc.reason}", 1)
+        # 注意：HTTPError 是 URLError 的子类，上面那条已先接住；这里只剩真正的连接层失败。
+        # ★ 2026-09-22 实测教训：服务端**提前关连接**（例如打了不存在的端点）会以
+        #   BrokenPipeError 的形式落到这里，旧文案一律写"网络不可达" → 拿着 404 的病因
+        #   去查网络，方向全错。故按异常类型分流，并给出最可能的原因。
+        reason = exc.reason
+        kind = type(reason).__name__ if reason is not None else "URLError"
+        if kind in ("BrokenPipeError", "ConnectionResetError"):
+            return die(f"连接被服务端提前关闭（{kind}）：{reason}\n"
+                       f"最常见原因是端点不存在或拒绝请求体 —— 先核对请求地址/负载格式，\n"
+                       f"不要按网络问题排查。可用 --dry-run 打印实际端点。", 1)
+        return die(f"网络不可达（{kind}）：{reason}", 1)
     except (OSError, RuntimeError, ValueError, KeyError) as exc:
         return die(f"请求/解析失败：{exc}", 1)
 
