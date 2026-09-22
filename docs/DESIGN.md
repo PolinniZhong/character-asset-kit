@@ -1,4 +1,4 @@
-# DESIGN · character-asset-kit（软件设计说明）
+# DESIGN · 千面工坊·角色资产生产线（character-asset-kit，软件设计说明）
 
 ## 1. 硬约束（设计前提）
 

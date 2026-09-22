@@ -1,9 +1,10 @@
-# character-asset-kit
+# character-asset-kit · 千面工坊（Character Asset Production Line）
 
+> *A thousand views, one identity.*
 > An Agent Skill that turns a new character into a **cross-angle, cross-expression, cross-pose, cross-scene, training-ready, auditable** AIGC character asset library, following an enterprise-style gated pipeline (G0–G14).
 > The Agent generates images and orchestrates; this Skill provides the SOP, an evidence-based prompt methodology, and deterministic scripts.
-
-中文：[README.md](README.md)
+>
+> 中文：[README.md](README.md)（中文名：千面工坊 · 角色资产生产线）
 
 ## What problem it solves
 

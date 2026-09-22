@@ -4,6 +4,7 @@
 
 ## v1.2（2026-09-22）— 多运行时生图支持（生产线与出图解耦）
 
+- **定名「千面工坊 · 角色资产生产线」**（slogan：千面如一）；技术名/仓库名/frontmatter `name` 仍为 `character-asset-kit`（标识符不改，避免破坏 Skill 发现与引用），中文名进 SKILL.md 标题与 description 触发词、双语 README。
 - **新增跨运行时适配器 `scripts/bin/kit_generate.py`（纯标准库）**，支持五家提供商：
   - `openrouter`（OpenRouter Images 统一网关，一把 key 触达 Gemini/Seedream/GPT-Image/Recraft/Flux 等约 30 个模型，推荐的非豆包入口）；
   - `google`（Gemini 图像 generateContent，默认 `gemini-2.5-flash-image`，多参考编辑，参考图上限预检 3）；

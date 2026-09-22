@@ -1,4 +1,4 @@
-# PRD · character-asset-kit
+# PRD · 千面工坊·角色资产生产线（character-asset-kit）
 
 ## 1. 背景与问题
 
