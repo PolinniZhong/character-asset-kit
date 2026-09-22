@@ -1,0 +1,269 @@
+{
+  "code": "{CODE}",
+  "card_title": "角色设定图",
+  "tagline": "头身比例 · 风格插槽",
+  "palette": [
+    {
+      "name": "头发",
+      "hex": "#000000",
+      "text": "#FFFFFF"
+    },
+    {
+      "name": "肤色亮",
+      "hex": "#F2C6B4",
+      "text": "#3C2823"
+    },
+    {
+      "name": "肤色中",
+      "hex": "#E2A48C",
+      "text": "#3C2823"
+    },
+    {
+      "name": "肤色暗",
+      "hex": "#C77F6E",
+      "text": "#FFFFFF"
+    },
+    {
+      "name": "虹膜",
+      "hex": "#000000",
+      "text": "#FFFFFF"
+    },
+    {
+      "name": "上装",
+      "hex": "#FFFFFF",
+      "text": "#333333"
+    },
+    {
+      "name": "下装",
+      "hex": "#000000",
+      "text": "#FFFFFF"
+    },
+    {
+      "name": "鞋",
+      "hex": "#FFFFFF",
+      "text": "#333333"
+    },
+    {
+      "name": "强调光",
+      "hex": "#4F9DFF",
+      "text": "#FFFFFF"
+    }
+  ],
+  "master": {
+    "white": "01_母版/{CODE}_母版_白底_v1.0.png",
+    "transparent": "01_母版/{CODE}_母版_透明_v1.0.png",
+    "bust": "05_营销胸像/{CODE}_营销胸像-前3-4_v1.0_白.png"
+  },
+  "boards": {
+    "multiview": {
+      "version": "v1.0",
+      "meta": "头身 · A字站姿",
+      "out_clean": "02_多视图/拼板/{CODE}_多视图板_v1.0_干净版.png",
+      "out_review": "02_多视图/拼板/{CODE}_多视图板_v1.0_验收版.png",
+      "items": [
+        {
+          "label": "正面",
+          "white": "02_多视图/单图/{CODE}_多视图-正面_v1.0_白.png"
+        },
+        {
+          "label": "前四分之三",
+          "white": "02_多视图/单图/{CODE}_多视图-前四分之三_v1.0_白.png"
+        },
+        {
+          "label": "正侧面",
+          "white": "02_多视图/单图/{CODE}_多视图-正侧_v1.0_白.png"
+        },
+        {
+          "label": "后四分之三",
+          "white": "02_多视图/单图/{CODE}_多视图-后四分之三_v1.0_白.png"
+        },
+        {
+          "label": "背面",
+          "white": "02_多视图/单图/{CODE}_多视图-背面_v1.0_白.png"
+        }
+      ]
+    },
+    "expression": {
+      "version": "v1.0",
+      "meta": "6格表情 · 统一取景",
+      "crop": [
+        0,
+        40,
+        1773,
+        1440
+      ],
+      "out_clean": "03_表情/拼板/{CODE}_表情板_v1.0_干净版.png",
+      "out_review": "03_表情/拼板/{CODE}_表情板_v1.0_验收版.png",
+      "items": [
+        {
+          "label": "0中性",
+          "card_label": "0 中性",
+          "white": "03_表情/单图/{CODE}_表情-0中性_v1.0_白.png"
+        }
+      ]
+    },
+    "detail": {
+      "version": "v1.0",
+      "meta": "6格局部特写",
+      "out_clean": "04_细节特写/拼板/{CODE}_细节板_v1.0_干净版.png",
+      "out_review": "04_细节特写/拼板/{CODE}_细节板_v1.0_验收版.png",
+      "items": []
+    },
+    "pose": {
+      "version": "v1.0",
+      "meta": "动作姿态",
+      "out_clean": "06_动作姿态/拼板/{CODE}_动作姿态板_v1.0_干净版.png",
+      "out_review": "06_动作姿态/拼板/{CODE}_动作姿态板_v1.0_验收版.png",
+      "items": []
+    },
+    "prop": {
+      "version": "v1.0",
+      "meta": "道具与手持",
+      "out_clean": "07_道具/拼板/{CODE}_道具手持板_v1.0_干净版.png",
+      "solo": [],
+      "held": []
+    },
+    "micro_expression": {
+      "version": "v1.0",
+      "meta": "4族×3强度+中性（封存后扩展 G10）",
+      "out_clean": "03_表情/微表情矩阵/拼板/{CODE}_微表情矩阵_v1.0_干净版.png",
+      "out_review": "03_表情/微表情矩阵/拼板/{CODE}_微表情矩阵_v1.0_验收版.png",
+      "neutral_ref": "03_表情/单图/{CODE}_表情-0中性_v1.0_白.png",
+      "families": [
+        {
+          "key": "E1",
+          "label": "喜悦",
+          "optional": false,
+          "levels": [
+            {
+              "label": "L1 浅笑",
+              "white": "03_表情/微表情矩阵/单图/{CODE}_微表情-E1L1_白.png"
+            },
+            {
+              "label": "L2 露齿笑",
+              "white": "03_表情/微表情矩阵/单图/{CODE}_微表情-E1L2_白.png"
+            },
+            {
+              "label": "L3 开怀大笑",
+              "white": "03_表情/微表情矩阵/单图/{CODE}_微表情-E1L3_白.png"
+            }
+          ]
+        },
+        {
+          "key": "E2",
+          "label": "惊讶",
+          "optional": false,
+          "levels": []
+        },
+        {
+          "key": "E3",
+          "label": "思考",
+          "optional": false,
+          "levels": []
+        },
+        {
+          "key": "E4",
+          "label": "严肃",
+          "optional": false,
+          "levels": []
+        },
+        {
+          "key": "E5",
+          "label": "难过",
+          "optional": true,
+          "levels": []
+        },
+        {
+          "key": "E6",
+          "label": "生气",
+          "optional": true,
+          "levels": []
+        }
+      ],
+      "_comment": "levels 为空的族（含 optional 族）构建时自动跳过、不占行高；做 19 格（6 族）时再把 E5/E6 的 levels 补齐。"
+    },
+    "gaze": {
+      "version": "v1.0",
+      "meta": "俯仰2 + 视线4（封存后扩展 G11）",
+      "out_clean": "02_多视图/俯仰视线/拼板/{CODE}_机位视线板_v1.0_干净版.png",
+      "out_review": "02_多视图/俯仰视线/拼板/{CODE}_机位视线板_v1.0_验收版.png",
+      "front_ref": "03_表情/单图/{CODE}_表情-0中性_v1.0_白.png",
+      "camera": [
+        {
+          "label": "俯角15°",
+          "white": "02_多视图/俯仰视线/单图/{CODE}_机位-俯15_白.png"
+        },
+        {
+          "label": "仰角15°",
+          "white": "02_多视图/俯仰视线/单图/{CODE}_机位-仰15_白.png"
+        }
+      ],
+      "eyes": [
+        {
+          "label": "左视30°",
+          "white": "02_多视图/俯仰视线/单图/{CODE}_视线-左30_白.png"
+        },
+        {
+          "label": "右视30°",
+          "white": "02_多视图/俯仰视线/单图/{CODE}_视线-右30_白.png"
+        },
+        {
+          "label": "斜上视",
+          "white": "02_多视图/俯仰视线/单图/{CODE}_视线-斜上_白.png"
+        },
+        {
+          "label": "斜下视",
+          "white": "02_多视图/俯仰视线/单图/{CODE}_视线-斜下_白.png"
+        }
+      ]
+    },
+    "character_sheet": {
+      "version": "v1.0",
+      "meta": "角色设定总览 · 严格 3:4",
+      "height": 3240,
+      "out_clean": "10_商卡成品/{CODE}_角色设定板_v1.0_干净版.png",
+      "out_review": "10_商卡成品/{CODE}_角色设定板_v1.0_验收版.png",
+      "_comment_fields": "8 个字段值必须逐字取自角色规格卡，禁止现场编造；label 可按角色调整但保持 8 行。",
+      "fields": [
+        {
+          "label": "身份",
+          "value": "性别 · 年龄 · 职业"
+        },
+        {
+          "label": "头身比例",
+          "value": "如：约5.5头身 · 偏写实年轻成人比例"
+        },
+        {
+          "label": "材质",
+          "value": "如：皮克斯/盲盒手办3D · 哑光柔和"
+        },
+        {
+          "label": "发型",
+          "value": "发型签名一句话"
+        },
+        {
+          "label": "上装",
+          "value": "外套＋内搭"
+        },
+        {
+          "label": "下装与鞋",
+          "value": "裤/裙＋鞋"
+        },
+        {
+          "label": "配饰",
+          "value": "签名配饰（无则写“无”）"
+        },
+        {
+          "label": "禁止项",
+          "value": "零标识零文字 · 非Q版非真人 等"
+        }
+      ]
+    },
+    "card": {
+      "version": "v1.0",
+      "height": 5020,
+      "out": "10_商卡成品/{CODE}_角色设定商卡_v1.0.png"
+    }
+  },
+  "_comment": "占位 {CODE} 在 init 时替换为角色代号。boards.*.meta 是会被原样画到成品板上的对外文字，禁止写内部备注/缺口编号。"
+}

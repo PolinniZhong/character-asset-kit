@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+._*
+
+# 派生物（角色库内生成，不进 skill 仓）
+subjectmask
+renditions/
+**/11_训练素材/datasets/
+
+# 本地临时
+*.tmp

@@ -1,0 +1,35 @@
+{
+  "_comment": "G14 训练素材配置模板。复制到角色包 11_训练素材/trainset.config.json 后逐项填写。键名/结构是脚本契约，不要改键；中文槽位键（如 1微笑）必须与 03_表情/04_细节特写 的定稿文件名一致。",
+
+  "code": "CHAR-01",
+  "trigger": "char01xxx",
+  "style_token": "style3d",
+  "gender": "male",
+
+  "master_rel": "01_母版/CHAR-01_母版_白底_v1.0.png",
+
+  "identity": "char01xxx, 3d cartoon male character, style3d, <年龄/职业一句话>, <发型：颜色/长度/质感/签名细节>, <脸型/眼睛/肤色>, <上装>, <下装>, <鞋>, <配饰或 none>, blind-box vinyl toy figure, matte soft skin and fabric with gentle sheen, 5.5-head chibi-realistic proportions, plain white studio background, soft even lighting",
+
+  "expr": {
+    "0中性": ["expr0-neutral", "neutral expression"],
+    "1微笑": ["expr1-smile", "gentle closed-mouth smile"],
+    "2思考": ["expr2-thinking", "thinking expression"],
+    "3露齿笑": ["expr3-toothy-smile", "open-mouth toothy smile"],
+    "4惊讶": ["expr4-surprised", "surprised expression"],
+    "5严肃": ["expr5-serious", "serious expression"]
+  },
+
+  "detail": {
+    "1发丝": ["detail-hair", "textured hair strands"],
+    "2眼部": ["detail-eyes", "the eye area"],
+    "3领口": ["detail-collar", "the t-shirt collar"],
+    "4裤脚": ["detail-cuff", "the pant cuff"],
+    "5鞋": ["detail-sneaker", "the shoe"],
+    "6手部": ["detail-hand", "the hand"]
+  },
+
+  "val_slugs": ["master", "view-side", "expr1-smile", "pose-B1-walking", "detail-eyes"],
+
+  "pose": {},
+  "held": {}
+}

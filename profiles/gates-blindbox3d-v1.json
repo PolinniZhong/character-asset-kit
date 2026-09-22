@@ -1,0 +1,108 @@
+{
+  "profile_id": "gates-blindbox3d-v1",
+  "display_name": "盲盒手办 3D 角色生产线（G0–G14）",
+  "version": "v1.0",
+  "head_ratio": 5.5,
+  "style_token": "style3d",
+  "material": "皮克斯/盲盒手办质感 3D 人物，哑光柔和皮肤与布料带细腻光泽，电影感柔和立体主光，轮廓一圈淡电光蓝 rim light；偏写实少年到年轻成人比例，非 Q 版二头身、非吉祥物、非真人照片、非 2D 扁平",
+  "background": {
+    "default": "纯白摄影棚底，均匀柔光，脚下柔和接触阴影",
+    "world": "深蓝藏青到靛蓝径向渐变空间，极细腻网点，角色身后一圈极淡电光蓝柔光，3-5 个细小蓝色光斑/星芒；深色微反射地面；极简磨砂/玻璃拟态家具；配色仅深蓝、电光蓝、白与角色肤色服装色"
+  },
+  "forbidden": [
+    "画面零文字/字母/数字/logo/水印/标注线（规格卡登记的签名印花除外）",
+    "无第二人物、无界面窗口、无对话框、无标牌",
+    "无彩虹色、紫粉渐变、霓虹故障、赛博朋克重度光污染、满版噪点",
+    "无萌系超大眼、无夸张表情包五官、无真人写实照片感"
+  ],
+  "canvas": {
+    "standard_cell": [1773, 2364],
+    "square_cell": [2048, 2048],
+    "scene_vertical": [1773, 2364],
+    "scene_horizontal": [2560, 1440],
+    "character_sheet": [2430, 3240],
+    "standard_cell_fig_ratio": 0.80,
+    "standard_cell_sole_y": 2080,
+    "bust_fig_ratio": 0.925,
+    "square_detail_bbox": 0.86,
+    "square_prop_bbox": 0.72,
+    "contact_shadow_rgba": [30, 42, 75, 22],
+    "contact_shadow_blur": 14
+  },
+  "slots": {
+    "G1": "01_母版",
+    "G2": "02_多视图",
+    "G11_gaze": "02_多视图/俯仰视线",
+    "G3": "03_表情",
+    "G10": "03_表情/微表情矩阵",
+    "G4": "04_细节特写",
+    "G5": "05_营销胸像",
+    "G6": "06_动作姿态",
+    "G7": "07_道具",
+    "prompts": "08_提示词库",
+    "G13": "09_风格变体",
+    "G8": "10_商卡成品",
+    "G14": "11_训练素材",
+    "G12": "12_场景包",
+    "wip": "99_过程稿"
+  },
+  "gates": [
+    {"id": "G0", "name": "立项", "core": true, "outputs": ["规格卡", "资产清单", "目录树"], "script": "kit_init_character.py"},
+    {"id": "G1", "name": "白底母版", "core": true, "outputs": ["白底母版", "透明母版"], "script": "kit_standard_cell.py"},
+    {"id": "G2", "name": "五视图多视图", "core": true, "outputs": ["五视图单图", "多视图板"], "board": "multiview"},
+    {"id": "G3", "name": "基础表情", "core": true, "outputs": ["6 表情头肩", "表情板"], "board": "expression"},
+    {"id": "G4", "name": "细节特写", "core": true, "outputs": ["6 细节方格", "细节板"], "board": "detail"},
+    {"id": "G5", "name": "营销胸像", "core": true, "outputs": ["前3/4胸像"]},
+    {"id": "G6", "name": "动作姿态", "core": true, "outputs": ["A/B/C 组动作", "动作板"], "board": "pose"},
+    {"id": "G7", "name": "道具", "core": true, "outputs": ["单体图", "比例对照", "手持关系", "道具板"], "board": "prop"},
+    {"id": "G8", "name": "拼板与商卡", "core": true, "outputs": ["角色设定板", "商卡"], "board": "character_sheet/card"},
+    {"id": "G9", "name": "封存", "core": true, "outputs": ["台账全绿", "提示词归档"], "script": "kit_asset_index.py"},
+    {"id": "G10", "name": "微表情矩阵", "core": false, "outputs": ["4族x3档+中性=13格", "微表情板"], "board": "micro_expression"},
+    {"id": "G11", "name": "机位俯仰视线", "core": false, "outputs": ["俯仰2", "视线4", "机位视线板"], "board": "gaze"},
+    {"id": "G12", "name": "场景包", "core": false, "outputs": ["场景母版", "5场景竖/横", "总览板"], "script": "kit_scene_board.py"},
+    {"id": "G13", "name": "风格变体", "core": false, "outputs": ["风格母版", "五视图", "表情"], "script": "kit_style_board.py"},
+    {"id": "G14", "name": "训练素材备料", "core": false, "outputs": ["数据集(双caption/分层val)", "训练外指南"], "script": "kit_trainset.py", "note": "库内不训练"}
+  ],
+  "units": {
+    "expressions": [
+      {"key": "0中性", "slug": "expr0-neutral", "en": "neutral expression"},
+      {"key": "1微笑", "slug": "expr1-smile", "en": "gentle closed-mouth smile"},
+      {"key": "2思考", "slug": "expr2-thinking", "en": "thinking expression"},
+      {"key": "3露齿笑", "slug": "expr3-toothy-smile", "en": "open-mouth toothy smile"},
+      {"key": "4惊讶", "slug": "expr4-surprised", "en": "surprised expression"},
+      {"key": "5严肃", "slug": "expr5-serious", "en": "serious expression"}
+    ],
+    "micro_families": ["E1喜悦", "E2惊讶", "E3思考", "E4严肃"],
+    "micro_levels": ["L1", "L2", "L3"],
+    "poses": {
+      "A1挥手": "waving one hand in greeting",
+      "A2讲解": "explaining with a raised-hand gesture",
+      "A3摊开": "open palms gesture",
+      "A4抱胸": "arms crossed",
+      "A5托腮": "hand resting on the chin",
+      "B1行走": "walking",
+      "B2奔跑": "running",
+      "B3端坐": "sitting upright"
+    },
+    "held": {
+      "C1握笔记本": "typing on a laptop computer held in both hands",
+      "C2持平板": "holding a tablet computer in both hands",
+      "C3指屏幕": "pointing at a tablet screen",
+      "C3看手机": "looking at a smartphone held in both hands"
+    },
+    "scenes": ["SCN-01 工作台敲键盘", "SCN-02 持平板讲解", "SCN-03 坐姿思考", "SCN-04 挥手打招呼", "SCN-05 行走看手机"]
+  },
+  "style_slots": [
+    {"slot": "S1", "name": "盲盒3D", "is_primary": true},
+    {"slot": "S2", "name": "黏土 claymation", "hand_convention": "圆润四指（拇指+三指），插槽风格语言，须显式声明"},
+    {"slot": "S3", "name": "赛璐璐2D", "status": "reserved"},
+    {"slot": "S0", "name": "超写实", "status": "optional_last", "caution": "严防越过 5.5 头身变真人"}
+  ],
+  "trainset": {
+    "slot_dir": "S1-盲盒3D_v1.0",
+    "target_count": 47,
+    "framing_repeats": {"face": 12, "medium": 8, "full": 6},
+    "val_count": 5,
+    "config_template": "../../templates/trainset.config.example.json"
+  }
+}
