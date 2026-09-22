@@ -6,6 +6,8 @@
 
 English: [README.en.md](README.en.md)
 
+![一个母版产出的角色资产矩阵：五视图、表情、细节、动作、道具、微表情、机位视线、场景与设定板](docs/images/hero-asset-matrix.jpg)
+
 ## 它解决什么问题
 
 "能生成一个好看的角色"和"拥有一个稳定可复用的角色资产"是两件事。后者需要：
@@ -16,10 +18,19 @@ English: [README.en.md](README.en.md)
 4. **提示词资产化**：每张定稿图六段式沉淀（用途/喂料/原文/尺寸/验收/bad case）；
 5. **实证的改写规则**：210 张受控复现实验的结论——参考图通道强于文字通道；模型听定性/数量/禁止词，不听数值/状态词；信息缺失改提示词即可，人体几何必须提示词＋参考图组合。
 
+![崩一格只重跑一格：逐张生成＋确定性拼板，废稿不向其他格扩散](docs/images/compare-one-shot.jpg)
+
 ## 现状
 
 - 方法论在两个完整角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN），暴露的 8 条缺口已全部修复，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)。
 - 画风、门集合、插槽、画幅全部 **profile 化**；默认 profile 是皮克斯/盲盒手办感 3D（`gates-blindbox3d-v1`），**只是一个示例**，不绑定任何具体角色。
+- [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) 提供一套真实产线输出的**脱敏成品板**（10 张，G2–G12），可直接查看各板型长相。
+
+![G0–G14 门径总览：每门一次验收，台账 0 ERROR 才封存](docs/images/pipeline-gates.png)
+
+方法论不是拍脑袋：三组共 210 张受控复现实验（每组 60 张），身份签名维度 **180 张零漂移**；三个预设假设 H1/H2/H3 均未获支持，结论如实记录、不做美化。成功率是 Seedream 5.0 Pro 的模型特定值，换新模型必须跑最小再验证集，不照搬数字。
+
+![210 张受控复现实验结果：G1 85.0% / G2 83.3% / G3 75.0%，身份维度零漂移](docs/images/evidence-210.png)
 
 ## 目录
 
@@ -72,6 +83,8 @@ python3 scripts/bin/kit_build_board.py --char CHAR-01-demo --type all --review
 python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --scaffold
 python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --check
 ```
+
+![真实命令输出：建包、台账登记、0 ERROR 对账，以及生图适配器的 dry-run 请求形状](docs/images/terminal-check.jpg)
 
 ## 非豆包运行时（OpenRouter / Gemini / OpenAI / 方舟 / 兼容网关 / 本地 CUDA）
 

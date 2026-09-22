@@ -6,6 +6,8 @@
 >
 > 中文：[README.md](README.md)（中文名：千面工坊 · 角色资产生产线）
 
+![One master produces a full character asset matrix: multi-view, expressions, details, poses, props, micro-expressions, camera & gaze, scenes, and the character sheet](docs/images/hero-asset-matrix.jpg)
+
 ## What problem it solves
 
 "Generating one good-looking character" and "owning a stable, reusable character asset" are two different things. The latter requires:
@@ -16,10 +18,19 @@
 4. **Prompts as assets**: every approved image is documented in a six-section record (purpose / reference feeding / verbatim prompt / size spec / acceptance / bad case).
 5. **Evidence-based rewrite rules** from 210 controlled reproduction runs: the reference-image channel is stronger than the text channel; models obey qualitative / quantitative / prohibition words but ignore numeric / state words; missing information is fixed by prompts alone, while body geometry requires prompt **and** reference image.
 
+![A broken cell is re-generated alone: single-unit generation plus deterministic assembly keeps a failure from spreading to the board](docs/images/compare-one-shot.jpg)
+
 ## Status
 
 - The methodology was proven end-to-end on two complete characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media items, 17 derived deliverables, sealed with 0 ERROR / 0 WARN). The 8 gaps it exposed have all been fixed — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md) (Chinese).
 - Style, gate set, directory slots, and canvas sizes are all **profile-driven**. The default profile is a Pixar/blind-box-toy 3D look (`gates-blindbox3d-v1`) — it is **just an example**, not bound to any specific character.
+- [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) ships a set of **desensitized real deliverable boards** (10 images, G2–G12) so you can see the actual output.
+
+![G0–G14 gate map: one sign-off per gate; the registry must show 0 ERROR before sealing](docs/images/pipeline-gates.png)
+
+The methodology is not guesswork: three groups of 60 controlled reproduction runs (210 images total) produced **zero identity drift across 180 identity-dimension images**. All three pre-registered hypotheses H1/H2/H3 were unsupported — the findings are reported as-is, not polished. The success rates are specific to Seedream 5.0 Pro; after switching models you must run the minimal re-validation set rather than reusing these numbers.
+
+![Results of the 210-image controlled study: G1 85.0% / G2 83.3% / G3 75.0% usable, with zero identity drift](docs/images/evidence-210.png)
 
 ## Layout
 
@@ -72,6 +83,8 @@ python3 scripts/bin/kit_build_board.py --char CHAR-01-demo --type all --review
 python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --scaffold
 python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --check
 ```
+
+![Real command output: package init, registry scaffolding, 0 ERROR audit, and a dry-run request shape for the image adapter](docs/images/terminal-check.jpg)
 
 ## Non-Doubao runtimes (OpenRouter / Gemini / OpenAI / Volcano Ark / compatible gateways / local CUDA)
 
