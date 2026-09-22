@@ -9,7 +9,11 @@ description: 千面工坊·角色资产生产线（character-asset-kit）。当�
 
 把"一个新角色"做成**可复用、可对账、可训练备料**的整套资产：身份签名先冻结，再逐单元生成、逐门验收，确定性脚本负责一切像素排版与台账。方法论来自一条真实跑通的生产线（两个角色走完 G0–G14、第三个角色 G0–G12 自用验证）与 210 张受控复现实验；门径、插槽、风格全部 **profile 化**，本 skill 不绑定任何具体角色或具体画风。
 
-**版本 v1.2（2026-09-22）**：生图运行时层解耦——默认仍走豆包 `seedream_5.0_pro`，新增 `kit_generate.py`（纯标准库）支持 OpenRouter 统一网关 / Google Gemini / OpenAI gpt-image / 火山方舟 / 任意兼容网关，含模型解析优先级、参考图上限预检、`--dry-run`、限流重试、非 PNG 归一；新增 `references/runtime-portability.md`（提供商矩阵与最小再验证）。v1.1：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。
+**版本 v1.2.2（2026-09-22）**：
+- **v1.2**：生图运行时层解耦——默认仍走豆包 `seedream_5.0_pro`，新增 `kit_generate.py`（纯标准库）支持 OpenRouter 统一网关 / Google Gemini / OpenAI gpt-image / 火山方舟 / 任意兼容网关，含模型解析优先级、参考图上限预检、`--dry-run`、限流重试、非 PNG 归一；新增 `references/runtime-portability.md`（提供商矩阵与最小再验证）。
+- **v1.2.1（方舟真机验证修复）**：持密钥打通 `--provider ark` 后修掉四条**静态检查抓不到**的缺陷——图生图端点（方舟无 `/images/edits`，改走 `/images/generations` + JSON `image`）、**零水印**（方舟不传 `watermark` 默认 `true`，现始终显式 `false`）、错误分类（`BrokenPipeError` 不再被写成"网络不可达"）、密钥候选（`key_env` 支持候选表）。
+- **v1.2.2（参考图配置：新增一个维度）**：`prompt-rewrite-rules.md` **新增 §7**——**构图锚必须与目标构图同景别、且一次只给一个**；混景别双锚（如全身母版＋胸像锚）时模型**两张都不跟、把主体撑满整幅**；成品资产不能当构图锚。坏例 **BC-34**。
+- v1.1：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。
 
 ## 硬约束（任何门都适用）
 

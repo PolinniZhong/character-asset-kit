@@ -118,7 +118,7 @@ tests/                   # 纯标准库 unittest（不依赖网络、不依赖 m
 | G14 只备料不训练 | 内置训练 | 训练环境/模型许可在库外，库内只保证数据集规格 |
 | 生产线与生图解耦（v1.2） | 把模型名写死进脚本/提示词 | 模型会换代、运行时不同；门径/提示词/落格/台账与厂商无关，出图只占一个可替换插槽 |
 | 非豆包默认推荐 OpenRouter 网关（v1.2） | 只对接 OpenAI 官方 / 每家各写一套 | 一把 key 触达约 30 个图像模型（含 Seedream/Gemini/GPT-Image），用户换模型不改代码；官方端点与 Gemini 仍单独支持 |
-| 适配器纯标准库 + 离线 mock 测试（v1.2） | 引官方 SDK / 真机测试入仓 | 零依赖原则；密钥不进仓，真机回归交给用户按 runtime-portability §4 执行，请求形状用 mock 锁定 |
+| 适配器纯标准库 + 离线 mock 测试（v1.2） | 引官方 SDK / 真机测试入仓 | 零依赖原则；密钥不进仓，真机回归**不写进测试套件**（跑一次即弃、结论回灌文档），请求形状用 mock 锁定；v1.2.1 起方舟已由维护者持密钥真机回归一次，结论落 `runtime-portability.md` |
 
 ## 9. 测试策略
 
@@ -139,4 +139,4 @@ tests/                   # 纯标准库 unittest（不依赖网络、不依赖 m
 - 非 macOS 的自动抠图未内置（三选一里路径 2 色键可跨平台，路径 3 依赖外部工具）。
 - 中文字体：默认冬青黑体（macOS 自带）；其他平台需在板构建时指定可用 CJK 字体路径。
 - 训练在库外；G14 产物面向 kohya/ai-toolkit 目录约定。
-- 生图适配器（v1.2）的五提供商请求形状按公开文档实现、仅离线 mock 验证，未持密钥真机回归；DashScope/即梦/Replicate 与 ComfyUI 本地 CUDA 暂只留契约（runtime-portability §7/§8），需要时按同一适配器模式扩展。
+- 生图适配器（v1.2）的**方舟（ark）通路已于 v1.2.1 持密钥真机回归**（顺手修掉四条静态检查抓不到的缺陷：JSON-only 图生图端点、显式 `watermark:false`、错误分类、密钥候选——见 CHANGELOG v1.2.1 与 `runtime-portability.md` 的方舟实测段）；**其余四家（openai / google / openrouter / custom）仍仅离线 mock 验证、未持密钥真机回归**。DashScope/即梦/Replicate 与 ComfyUI 本地 CUDA 暂只留契约（runtime-portability §7/§8），需要时按同一适配器模式扩展。
