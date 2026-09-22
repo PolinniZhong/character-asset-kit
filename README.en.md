@@ -33,6 +33,7 @@ character-asset-kit/
 │   ├── bad-cases.md             #   Failure catalog BC-01…33
 │   ├── acceptance-checklists.md #   Per-gate checklists
 │   ├── registry-rules.md        #   Registry E/W rule codes
+│   ├── runtime-portability.md   #   Multi-provider image backends + minimal re-validation
 │   └── style-profiles.md        #   Changing style / trimming gates
 ├── profiles/gates-blindbox3d-v1.json  # Example profile (gates / slots / canvases / units)
 ├── templates/                   # Spec card, asset manifest, training config templates
@@ -40,7 +41,7 @@ character-asset-kit/
 │   ├── charkit/                 #   Cutout, standard cells, nine board builders, fonts
 │   └── bin/                     #   init / standard_cell / colorkey_cutout /
 │                                #   build_board / asset_index / scene_board /
-│                                #   style_board / trainset (+ subjectmask.swift)
+│                                #   style_board / trainset / generate (+ subjectmask.swift)
 ├── tests/                       # Stdlib-only unittest (no network, no macOS Vision dependency)
 ├── examples/                    # Desensitized end-to-end walkthrough
 └── docs/                        # PRD / DESIGN (SDD) / DOGFOODING (Chinese)
@@ -71,11 +72,38 @@ python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --scaffold
 python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --check
 ```
 
+## Non-Doubao runtimes (OpenRouter / Gemini / OpenAI / Volcano Ark / compatible gateways / local CUDA)
+
+The pipeline is decoupled from the image backend: on Doubao the host tools `image_gen`/`image_edit` (`seedream_5.0_pro`) are the default; elsewhere the bundled zero-dependency adapter `scripts/bin/kit_generate.py` supports five providers:
+
+| provider | key env var | default model | reference images |
+|---|---|---|---|
+| `openrouter` (recommended) | `OPENROUTER_API_KEY` | `google/gemini-3.1-flash-image` | model-dependent; one key reaches ~30 image models |
+| `google` | `GOOGLE_API_KEY` | `gemini-2.5-flash-image` | strong, limit 3 (14 for the gemini-3 family) |
+| `openai` | `OPENAI_API_KEY` | `gpt-image-2.5-flare` | multipart, limit 16 |
+| `ark` | `ARK_API_KEY` | none — pass the endpoint via `--model` | depends on the endpoint model |
+| `custom` | `OPENAI_API_KEY` + `OPENAI_BASE_URL` | none — pass `--model` | any OpenAI Images-compatible gateway |
+
+```bash
+export OPENROUTER_API_KEY=...
+# Dry-run first: prints the request shape without calling or billing
+python3 scripts/bin/kit_generate.py --provider google --mode edit --ref master.png \
+  --prompt-file p.txt --size 1773x2364 --dry-run
+# Text-to-image / multi-reference edit (one image per call; non-PNG replies normalized to PNG)
+python3 scripts/bin/kit_generate.py --provider openrouter --mode gen \
+  --prompt-file p.txt --size 1773x2364 --out 99_过程稿/raw.png
+python3 scripts/bin/kit_generate.py --provider google --mode edit \
+  --ref master.png --ref ref.png --prompt "……" --size 1773x2364 --out raw.png
+```
+
+Model resolution: `--model` > env `<PROVIDER>_IMAGE_MODEL` > built-in default; 429/5xx retry twice with backoff, 4xx is final.
+Gates, prompt framework, cell normalization, boards and ledgers are model-agnostic; but the 210-image compliance findings are seedream-specific — **before switching models, run the minimal G1/G2/G3/G7 re-validation in [runtime-portability.md](references/runtime-portability.md) §4**. Local CUDA (ComfyUI/Flux/SD) wraps behind the CLI contract in §7 of that document.
+
 ## Requirements
 
 - Python 3.10+ and Pillow (`pip install pillow`). No other required Python dependencies.
 - Automatic cutout (subjectmask) uses **macOS Vision**: Swift source ships in the repo and is compiled with `swiftc` on first init (source only, no binaries). On other platforms, cut out with any tool and pass `--already-cutout`, or use the cross-platform color-key script `kit_colorkey_cutout.py` for pure-white seamless backgrounds.
-- The image model is provided by the runtime. The methodology is written against `seedream_5.0_pro` by default; substitute equivalent capabilities per `references/gates-g0-g9.md §0` in other runtimes.
+- The image model is provided by the runtime: Doubao `seedream_5.0_pro` by default, or OpenRouter/Gemini/OpenAI/Ark/compatible gateways via `kit_generate.py` — see [runtime-portability.md](references/runtime-portability.md).
 - Board labels use Hiragino Sans GB by default (shipped with macOS); on other platforms point the builders at an available CJK font.
 
 ## Tests

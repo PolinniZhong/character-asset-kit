@@ -2,6 +2,22 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## v1.2（2026-09-22）— 多运行时生图支持（生产线与出图解耦）
+
+- **新增跨运行时适配器 `scripts/bin/kit_generate.py`（纯标准库）**，支持五家提供商：
+  - `openrouter`（OpenRouter Images 统一网关，一把 key 触达 Gemini/Seedream/GPT-Image/Recraft/Flux 等约 30 个模型，推荐的非豆包入口）；
+  - `google`（Gemini 图像 generateContent，默认 `gemini-2.5-flash-image`，多参考编辑，参考图上限预检 3）；
+  - `openai`（Images generations/edits multipart，默认 `gpt-image-2.5-flare`，参考图上限 16）；
+  - `ark`（火山方舟 OpenAI 兼容网关，`--model` 传推理端点）；
+  - `custom`（任意 OpenAI Images 兼容端点，`OPENAI_BASE_URL` + `--keep-size`）。
+- 模型解析优先级：`--model` ＞ 环境变量 `<PROVIDER>_IMAGE_MODEL` ＞ 内置默认；`--provider` 省略时按已存在的 key 自动探测（openrouter→google→openai→ark）。
+- 工程行为：一次调用只出 1 张；429/5xx 指数退避重试 2 次、4xx 直接失败；`--dry-run` 离线打印请求形状（不调用不花钱）；非 PNG 返回（JPEG/WebP）自动归一为 PNG 落盘；竖版 3:4 在 gpt-image 族映射为 1024×1536（2:3，比例差由 standard_cell 落格吸收），Gemini/OpenRouter 走宽高比枚举。
+- profile `runtime` 块扩为五提供商（含能力位、密钥环境变量、选型注释）；新增 `references/runtime-portability.md`（提供商矩阵、能力清单、选型建议、最小再验证 G1/G2/G3/G7、密钥纪律、本地 CUDA CLI 契约、调研来源）。
+- SKILL.md 硬约束第 3 条由"模型绑定"改为"运行时路由"；README/README.en 增"非豆包运行时"章节。
+- 测试：新增 `tests/test_generation.py` 20 个离线用例（五提供商请求形状、multipart 单/多图、Gemini inline_data 与 3:4、OpenRouter input_references、自动探测、env 模型覆盖、429 重试/4xx 终态、dry-run 不联网、JPEG→PNG 归一、参考图超限、缺 key/缺 model 退出码），全仓 34 个测试全绿。
+- **诚实更正**：v1.2 讨论初期我曾断言"OpenAI 只有 gpt-image-1、没有 Image 2.x"。该说法错误：OpenAI 已于 2026-09-08 在 API 发布 `gpt-image-2.5-flare` 与 `gpt-image-2.5-sunburst`（另有 gpt-image-2、gpt-image-1.5）。默认模型已按此修正。
+- **验证边界（如实声明）**：豆包宿主工具路径已在生产与 DSH 实测跑通；五个 HTTP 适配器的请求形状依据公开文档与两个对标开源 skill（baoyu-image-gen、k-dense/generate-image）实现，仅经离线 mock 测试，**未持密钥真机回归**；首次接入需按 runtime-portability §4 跑最小再验证。
+
 ## v1.1（2026-09-22）— 第三个角色自用验证（dogfooding）补丁回灌
 
 第三个角色在全新对话中只依赖本 Skill 跑完 G0–G12（media 106 / 交付物 17 / 0 ERROR），暴露并修复 8 条缺口：

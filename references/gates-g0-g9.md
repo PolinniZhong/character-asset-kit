@@ -8,13 +8,14 @@
 
 | 能力 | Doubao 运行时（默认） | 其他运行时的等价替换 |
 |---|---|---|
-| 文生图/图生图 | `image_gen` / `image_edit`，模型固定 `seedream_5.0_pro` | 同级图像模型；**必须支持多图参考输入**，否则 G2 之后无法做 |
+| 文生图/图生图 | `image_gen` / `image_edit`，模型固定 `seedream_5.0_pro` | OpenAI 官方/火山方舟/任意 OpenAI 兼容网关用 `scripts/bin/kit_generate.py`（用法见 `runtime-portability.md` §3）；本地 CUDA（ComfyUI 等）按该文 §6 契约自包。**必须支持多图参考输入**，否则 G2 之后无法做 |
 | 调用粒度 | 每次 `request_list` 仅 1 个请求 | 同 |
 | 抠图 | `subjectmask`（macOS Vision，随包编译） | 任意高质量主体抠图；对结果走 `kit_standard_cell.py --already-cutout` |
 | 像素工序 | 本 skill `scripts/`（Python 3.10+＋Pillow） | 同，脚本与模型无关 |
 | 字体 | 冬青黑体 Hiragino Sans GB（PingFang.ttc Pillow 无法直接打开） | 任一中性无衬线 CJK 字体，改 `charkit/fonts.py` 回退链 |
 
 **两条通道优先级（210 张实验结论，贯穿所有门）**：参考图通道 ＞ 文字通道。模型对"定性词/数量词/禁止词"服从度高；对"数值（占高 65%）/状态描述（屏幕合上）"服从度低。凡是数值/状态类要求，优先靠**参考图**或**翻译成外形特征**实现，见 `prompt-rewrite-rules.md`。
+> 注意：上述服从度数据与配方 A/B/C 均为 **seedream_5.0_pro 实测结论**，换模型前按 `runtime-portability.md` §4 跑最小再验证，不得把具体成功率搬到别的模型上。
 
 **画幅总表**
 

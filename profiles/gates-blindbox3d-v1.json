@@ -98,6 +98,78 @@
     {"slot": "S3", "name": "赛璐璐2D", "status": "reserved"},
     {"slot": "S0", "name": "超写实", "status": "optional_last", "caution": "严防越过 5.5 头身变真人"}
   ],
+  "runtime": {
+    "default": "doubao-native",
+    "model_resolution": "CLI --model ＞ 环境变量 <PROVIDER>_IMAGE_MODEL ＞ 下列默认值",
+    "providers": {
+      "doubao-native": {
+        "kind": "host-tools",
+        "gen_tool": "image_gen",
+        "edit_tool": "image_edit",
+        "model": "seedream_5.0_pro",
+        "multi_ref": true,
+        "native_sizes": true,
+        "note": "豆包运行时默认；每请求单图，参考图实际传入 image_reference_url_list"
+      },
+      "openrouter": {
+        "kind": "openrouter-images",
+        "script": "scripts/bin/kit_generate.py",
+        "base_url": "https://openrouter.ai/api/v1",
+        "api_key_env": "OPENROUTER_API_KEY",
+        "model_env": "OPENROUTER_IMAGE_MODEL",
+        "model": "google/gemini-3.1-flash-image",
+        "multi_ref": true,
+        "size_mode": "aspect",
+        "note": "一把 key 触达 Gemini/Seedream/GPT-Image/Recraft/Flux 等约 30 模型；统一 /images 端点；各模型参考图上限/参数不同，先 --dry-run"
+      },
+      "google": {
+        "kind": "gemini",
+        "script": "scripts/bin/kit_generate.py",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta",
+        "api_key_env": "GOOGLE_API_KEY",
+        "model_env": "GOOGLE_IMAGE_MODEL",
+        "model": "gemini-2.5-flash-image",
+        "multi_ref": true,
+        "ref_limit": 3,
+        "size_mode": "aspect",
+        "note": "多参考图编辑强；2.5-flash 参考图上限 3，gemini-3 族为 14（--model 切换）；只吃宽高比枚举"
+      },
+      "openai": {
+        "kind": "openai-images",
+        "script": "scripts/bin/kit_generate.py",
+        "base_url": "https://api.openai.com/v1",
+        "api_key_env": "OPENAI_API_KEY",
+        "model_env": "OPENAI_IMAGE_MODEL",
+        "model": "gpt-image-2.5-flare",
+        "multi_ref": true,
+        "ref_limit": 16,
+        "size_mode": "gpt-map",
+        "note": "gpt-image 族固定档位（竖 1024x1536 为 2:3，与本线 3:4 的差由 standard_cell 落格吸收）；gpt-image-1 支持透明底，2.5 族以厂商文档为准"
+      },
+      "ark": {
+        "kind": "openai-images",
+        "script": "scripts/bin/kit_generate.py",
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "api_key_env": "ARK_API_KEY",
+        "model_env": "ARK_IMAGE_MODEL",
+        "model": null,
+        "multi_ref": true,
+        "size_mode": "passthrough",
+        "note": "模型传推理端点 id（--model）；原生编辑字段若与 OpenAI multipart 不同，改用 custom 指兼容网关"
+      },
+      "custom": {
+        "kind": "openai-images",
+        "script": "scripts/bin/kit_generate.py",
+        "base_url_env": "OPENAI_BASE_URL",
+        "api_key_env": "OPENAI_API_KEY",
+        "model": null,
+        "multi_ref": null,
+        "size_mode": "passthrough",
+        "note": "任意 OpenAI Images 兼容端点（自建网关/第三方中转）；--keep-size 透传本线尺寸"
+      }
+    },
+    "switch_rule": "换提供商只改本块与出图调用；门径、提示词框架、落格、拼板、台账不变。新模型必须先跑 references/runtime-portability.md §4 的最小再验证（G1/G2/G3/G7），prompt-rewrite-rules 的服从度结论不得跨模型照搬。能力表核对日期 2026-09-22，模型迭代快，以 --dry-run 与厂商当时文档为准。"
+  },
   "trainset": {
     "slot_dir": "S1-盲盒3D_v1.0",
     "target_count": 47,

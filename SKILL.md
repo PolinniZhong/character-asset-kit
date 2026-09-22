@@ -7,13 +7,13 @@ description: 把一个新角色（3D 卡通/盲盒手办风为主，也适配其
 
 把"一个新角色"做成**可复用、可对账、可训练备料**的整套资产：身份签名先冻结，再逐单元生成、逐门验收，确定性脚本负责一切像素排版与台账。方法论来自一条真实跑通的生产线（两个角色走完 G0–G14、第三个角色 G0–G12 自用验证）与 210 张受控复现实验；门径、插槽、风格全部 **profile 化**，本 skill 不绑定任何具体角色或具体画风。
 
-**版本 v1.1（2026-09-22）**：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。
+**版本 v1.2（2026-09-22）**：生图运行时层解耦——默认仍走豆包 `seedream_5.0_pro`，新增 `kit_generate.py`（纯标准库）支持 OpenRouter 统一网关 / Google Gemini / OpenAI gpt-image / 火山方舟 / 任意兼容网关，含模型解析优先级、参考图上限预检、`--dry-run`、限流重试、非 PNG 归一；新增 `references/runtime-portability.md`（提供商矩阵与最小再验证）。v1.1：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。
 
 ## 硬约束（任何门都适用）
 
 1. **门径驱动，用户过门才推进**：每门结束给验收清单，用户明确说"过 / 确认 / ok / 通过"才进下一门；不得自行连跳。返工只改本门单元，不回改已定稿资产，除非用户明确要求。
 2. **身份签名是最高优先级**：规格卡（`00_角色规格卡_*.md`）冻结的发型签名/脸型/服装/头身比/材质，高于一切参考图。参考图与签名冲突时，停下问用户，不得自行改掉关键特征。
-3. **生图模型绑定（Doubao 运行时）**：用 `seedream_5.0_pro`；以图生图/参考绑定走 `image_edit`，从零起图走 `image_gen`；**每次 `request_list` 只放 1 个请求**，要多张就多次并行调用。其他运行时（Claude/ComfyUI 等）按 `references/gates-g0-g9.md §0` 的等价能力替换，门径与验收不变。
+3. **生图模型按运行时路由（默认豆包）**：豆包运行时用 `seedream_5.0_pro`，以图生图/参考绑定走 `image_edit`、从零起图走 `image_gen`，**每次 `request_list` 只放 1 个请求**，要多张就多次并行调用。其他运行时用 `scripts/bin/kit_generate.py` 直连：`openrouter`（统一网关，一把 key 触达 Gemini/Seedream/GPT-Image 等，推荐入口）/`google`（Gemini 图像）/`openai`（gpt-image 族）/`ark`（火山方舟）/`custom`（任意 OpenAI Images 兼容网关）；本地 CUDA（ComfyUI 等）按 `references/runtime-portability.md` §7 的 CLI 契约自包。**门径与验收不变**；换模型前必须读该文 §4 跑 G1/G2/G3/G7 最小再验证——服从度实验结论是 seedream 特定的，不得跨模型照搬。
 4. **资产本体零文字**：角色图上绝不出现文字、字母、数字、logo、水印、标注线；标签只允许出现在拼板/商卡的**排版层（画面外）**。服装自带签名印花是唯一例外且必须在规格卡登记。客户端预览上的"AI 生成"角标是平台叠加层、不在像素里；**入库以保存到本地的 PNG 为准**并重新打开放大核对。
 5. **单元直出，禁止整板直出**：多视图/表情/动作/道具一律**逐单元生成单图** → 确定性脚本抠图落标准格 → 脚本拼板。模型一次性直出多格板必然崩（脸不一致、镜像、手崩），这是实测铁律。
 6. **每张定稿立即沉淀提示词**：按六段式（用途 / 参考图喂料 / 提示词原文 / 尺寸口径 / 验收结论 / bad case）追加到该包 `08_提示词库/` 对应文档。这是生产线最有复用价值的资产，不能事后补记忆。
@@ -74,6 +74,7 @@ description: 把一个新角色（3D 卡通/盲盒手办风为主，也适配其
 4. 每门验收前：读 `references/acceptance-checklists.md` 对应清单；台账 E/W 码含义查 `references/registry-rules.md`。
 5. 用户要扩展门：读 `references/gates-g10-g14.md` 对应章节。
 6. 换画风/换门径/换插槽：读 `references/style-profiles.md` 与 `profiles/gates-blindbox3d-v1.json`，另存 profile，不改默认文件；门裁剪副本放库根 `profiles/`，命名见 style-profiles §5。
+7. 换生图模型/运行时（OpenAI、方舟、兼容网关、本地 CUDA）：读 `references/runtime-portability.md`，按 profile 的 `runtime` 块配置，并跑该文 §4 的最小再验证后再批量生产。
 
 ## 脚本速查（库根＝存放角色包的目录；脚本路径相对本 skill）
 
@@ -81,6 +82,11 @@ description: 把一个新角色（3D 卡通/盲盒手办风为主，也适配其
 SK=path/to/character-asset-kit
 # G0 建包（macOS 会自动编译并随包放 subjectmask）
 python3 "$SK/scripts/bin/kit_init_character.py" --dir CHAR-01-slug --root /path/to/library
+# 非豆包运行时出 raw（provider：openrouter 推荐 / google / openai / ark / custom；先 --dry-run 核对）
+export OPENROUTER_API_KEY=...
+python3 "$SK/scripts/bin/kit_generate.py" --provider openrouter --mode edit \
+  --ref 01_母版/CHAR-01_母版_v1.0_白.png --prompt-file 99_过程稿/p.txt \
+  --size 1773x2364 --out 99_过程稿/raw_G2左侧_v1.png
 # G1–G7 raw → 标准格（白底接触阴影版＋透明版）；包内单角色把 /path/to/library/CHAR 换成 . 并用 --char .
 python3 "$SK/scripts/bin/kit_standard_cell.py" --char /path/to/library/CHAR-01-slug \
   --in 99_过程稿/raw_xxx.jpg --white 06_动作姿态/单图/CHAR-01_动作-A1挥手_v1.0_白.png \

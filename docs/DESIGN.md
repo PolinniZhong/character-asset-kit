@@ -2,7 +2,7 @@
 
 ## 1. 硬约束（设计前提）
 
-1. **生图能力在运行时，不在仓内**：Skill 不内置模型调用，只规定 Agent 何时生图、喂什么参考、怎么验收。
+1. **生图能力在运行时，不在仓内**：Skill 不内置模型权重，只规定 Agent 何时生图、喂什么参考、怎么验收。豆包运行时走宿主工具；其他运行时由可选的零依赖 HTTP 适配器 `kit_generate.py`（v1.2）承担，模型名是配置项，门径不认识任何厂商。
 2. **确定性与审美分离**：凡是几何、排版、落格、拼板、台账，必须由 Python 脚本确定性完成；凡是长相、表情、构图好坏，由人＋Agent 判断。
 3. **单元直出，禁止整板直出**：模型一次只生成一个单元（一张正面、一个表情、一个道具），多格板由脚本拼。整板直出的手指/五官/镜像错误无法单格返工。
 4. **标签永远在画面之外**：所有拼板标签渲染在独立图框区，不压资产像素。
@@ -22,13 +22,14 @@ references/              # 方法论大脑（Markdown，Agent 按需读）
   bad-cases.md           #   崩图目录 BC-01…33：现象/根因/修法
   acceptance-checklists.md # 逐门验收清单
   registry-rules.md      # 台账 E/W 规则码
+  runtime-portability.md # 多运行时生图（v1.2）：提供商矩阵/最小再验证
   style-profiles.md      # 换画风/裁剪门/副本约定
 profiles/                # 门径 profile（示例：gates-blindbox3d-v1）
 templates/               # 规格卡 / 资产清单 / trainset config 模板
 scripts/
   charkit/               # 库：assets（抠图/落格）· board（画布/字体）· boards（九种板）· fonts
   bin/                   # CLI：init / standard_cell / colorkey_cutout / build_board /
-                         #      asset_index / scene_board / style_board / trainset
+                         #      asset_index / scene_board / style_board / trainset / generate
   bin/subjectmask.swift  # macOS Vision 抠图源码（init 时 swiftc 现编译，不发二进制）
 examples/                # 走通门径的脱敏示例说明
 tests/                   # 纯标准库 unittest（不依赖网络、不依赖 macOS Vision）
@@ -115,6 +116,9 @@ tests/                   # 纯标准库 unittest（不依赖网络、不依赖 m
 | 不做 pyproject 打包 | 发 pip 包 | 调用方是 Agent 不是 shell 用户；复制目录即用，版本随 Skill 走 |
 | 方格边长服从实现（2364） | 改代码凑文档的 2048 | 2364 是标准格长边、几何自洽；要 2048 显式 `--cell`（#004） |
 | G14 只备料不训练 | 内置训练 | 训练环境/模型许可在库外，库内只保证数据集规格 |
+| 生产线与生图解耦（v1.2） | 把模型名写死进脚本/提示词 | 模型会换代、运行时不同；门径/提示词/落格/台账与厂商无关，出图只占一个可替换插槽 |
+| 非豆包默认推荐 OpenRouter 网关（v1.2） | 只对接 OpenAI 官方 / 每家各写一套 | 一把 key 触达约 30 个图像模型（含 Seedream/Gemini/GPT-Image），用户换模型不改代码；官方端点与 Gemini 仍单独支持 |
+| 适配器纯标准库 + 离线 mock 测试（v1.2） | 引官方 SDK / 真机测试入仓 | 零依赖原则；密钥不进仓，真机回归交给用户按 runtime-portability §4 执行，请求形状用 mock 锁定 |
 
 ## 9. 测试策略
 
@@ -124,7 +128,8 @@ tests/                   # 纯标准库 unittest（不依赖网络、不依赖 m
 - **板构建**：缺配置段 exit 2；`--all` 缺核心板 WARN；空 levels 族不产生空白行（板高正确）；
 - **落格几何**：高主体在错误参数组合下抛 ValueError；`--square` 输出 2364²；
 - **色键**：合成近白底图泛洪抠除、深色主体保留、背景占比在合理区间；
-- **CLI 守卫**：`--all --char` 互斥 exit 2；空枚举 exit 2；库根不存在 exit 2 且无 traceback。
+- **CLI 守卫**：`--all --char` 互斥 exit 2；空枚举 exit 2；库根不存在 exit 2 且无 traceback；
+- **生图适配器（v1.2，test_generation）**：monkeypatch 唯一网络出口，锁定五提供商请求形状（OpenAI generations/edits multipart 单图与多图、Gemini generateContent 的 inline_data 与 aspectRatio、OpenRouter /images 的 input_references）、模型解析优先级、自动探测、429 重试/4xx 终态、dry-run 不联网、JPEG→PNG 归一、参考图上限与缺 key 退出码。
 
 三层验证各有盲区：unittest 查不出审美问题与模型侧崩图；目检查得出崩图但查不出台账漂移；台账 0 ERROR 不代表图好看。三层都过才封存。
 
@@ -134,3 +139,4 @@ tests/                   # 纯标准库 unittest（不依赖网络、不依赖 m
 - 非 macOS 的自动抠图未内置（三选一里路径 2 色键可跨平台，路径 3 依赖外部工具）。
 - 中文字体：默认冬青黑体（macOS 自带）；其他平台需在板构建时指定可用 CJK 字体路径。
 - 训练在库外；G14 产物面向 kohya/ai-toolkit 目录约定。
+- 生图适配器（v1.2）的五提供商请求形状按公开文档实现、仅离线 mock 验证，未持密钥真机回归；DashScope/即梦/Replicate 与 ComfyUI 本地 CUDA 暂只留契约（runtime-portability §7/§8），需要时按同一适配器模式扩展。

@@ -33,12 +33,13 @@ character-asset-kit/
 │   ├── bad-cases.md             #   崩图目录 BC-01…33
 │   ├── acceptance-checklists.md #   逐门验收清单
 │   ├── registry-rules.md        #   台账 E/W 规则码
+│   ├── runtime-portability.md   #   跨模型/跨运行时移植与最小再验证
 │   └── style-profiles.md        #   怎么换画风/裁剪门
-├── profiles/gates-blindbox3d-v1.json  # 示例 profile（门/插槽/画幅/单元）
+├── profiles/gates-blindbox3d-v1.json  # 示例 profile（门/插槽/画幅/单元/运行时）
 ├── templates/                   # 规格卡、资产清单、训练配置模板
 ├── scripts/                     # 确定性工序（Python 3.10+ / Pillow）
 │   ├── charkit/                 #   抠图、标准格、九种拼板、字体
-│   └── bin/                     #   init / standard_cell / colorkey_cutout /
+│   └── bin/                     #   init / generate / standard_cell / colorkey_cutout /
 │                                #   build_board / asset_index / scene_board /
 │                                #   style_board / trainset（+ subjectmask.swift）
 ├── tests/                       # 纯标准库 unittest（不联网、不依赖 macOS Vision）
@@ -71,11 +72,38 @@ python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --scaffold
 python3 scripts/bin/kit_asset_index.py --char CHAR-01-demo --check
 ```
 
+## 非豆包运行时（OpenRouter / Gemini / OpenAI / 方舟 / 兼容网关 / 本地 CUDA）
+
+生产线与出图解耦：豆包运行时默认用宿主工具 `image_gen`/`image_edit`（`seedream_5.0_pro`）；其他运行时用自带适配器 `scripts/bin/kit_generate.py`（纯标准库，无新增依赖），五家提供商：
+
+| provider | 密钥环境变量 | 默认模型 | 参考图 |
+|---|---|---|---|
+| `openrouter`（推荐） | `OPENROUTER_API_KEY` | `google/gemini-3.1-flash-image` | 随模型，一把 key 触达约 30 个图像模型 |
+| `google` | `GOOGLE_API_KEY` | `gemini-2.5-flash-image` | 强，上限 3（gemini-3 族 14） |
+| `openai` | `OPENAI_API_KEY` | `gpt-image-2.5-flare` | multipart，上限 16 |
+| `ark` | `ARK_API_KEY` | 无，`--model` 传推理端点 | 看端点模型 |
+| `custom` | `OPENAI_API_KEY` + `OPENAI_BASE_URL` | 无，`--model` 显式传 | 任意 OpenAI Images 兼容网关 |
+
+```bash
+export OPENROUTER_API_KEY=...
+# 先 dry-run 核对请求形状（不调用、不花钱）
+python3 scripts/bin/kit_generate.py --provider google --mode edit --ref 母版.png \
+  --prompt-file p.txt --size 1773x2364 --dry-run
+# 文生图 / 多参考编辑（一次一张；非 PNG 返回自动转 PNG）
+python3 scripts/bin/kit_generate.py --provider openrouter --mode gen \
+  --prompt-file p.txt --size 1773x2364 --out 99_过程稿/raw.png
+python3 scripts/bin/kit_generate.py --provider google --mode edit \
+  --ref 母版.png --ref 参考.png --prompt "……" --size 1773x2364 --out raw.png
+```
+
+模型解析：`--model` ＞ 环境变量 `<PROVIDER>_IMAGE_MODEL` ＞ 内置默认；429/5xx 自动重试 2 次，4xx 不重试。
+门径、提示词框架、落格、拼板、台账与模型无关；但 210 张服从度实验结论是 seedream 特定的，**换模型前必须按 [runtime-portability.md](references/runtime-portability.md) §4 跑 G1/G2/G3/G7 最小再验证**。本地 CUDA（ComfyUI/Flux/SD）按该文 §7 的 CLI 契约自包一层。
+
 ## 环境
 
 - Python 3.10+、Pillow（`pip install pillow`），纯 Python 侧无其他必需依赖。
 - 自动抠图（subjectmask）依赖 **macOS Vision**：Swift 源码随仓，首次 init 自动 `swiftc` 编译（只发源码不发二进制）。非 macOS 用任意抠图工具后传 `--already-cutout`，或对纯白底素材用跨平台色键脚本 `kit_colorkey_cutout.py`。
-- 生图模型与工具由运行时提供；方法论以 `seedream_5.0_pro` 为默认绑定写成，其他运行时按 `references/gates-g0-g9.md §0` 替换等价能力。
+- 生图模型与工具由运行时提供；默认绑定豆包 `seedream_5.0_pro`，OpenRouter/Gemini/OpenAI/方舟/兼容网关走 `kit_generate.py`，详见 [runtime-portability.md](references/runtime-portability.md)。
 - 中文字体默认冬青黑体（macOS 自带）；其他平台需为拼板指定可用 CJK 字体。
 
 ## 测试
