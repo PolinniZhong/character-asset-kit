@@ -17,6 +17,7 @@
 - 另：清单 `boards.*.meta` 是会上板的对外文字（BC-31），模板加 `_comment` 说明。
 - 开源包装：新增 `tests/`（14 个 unittest：端到端冒烟、CLI 守卫、落格几何、色键、空族跳过）、`docs/PRD.md`、`docs/DESIGN.md`（SDD）、`docs/DOGFOODING.md`（覆盖率报告）、双语 README、CONTRIBUTING、examples 端到端走查。
 - BC-33：正面复用母版时若字节拷贝，上层资产中心按内容指纹去重会串号 → 必须重新落格产出独立文件（见 bad-cases）。
+- **自查纠错**：v1.0 的 CHANGELOG 声称"BC-01–27"随首版分发，但 `bad-cases.md` 实际只在门径文档中引用了编号、目录文件缺失；v1.1 据框架 bad case 表、210 样本复现实验与 dogfooding 记录整理为完整 BC-01–33（每条四段：现象/根因/修法/首现门）。
 
 ## v1.0（2026-09-21）— 首版封装
 
