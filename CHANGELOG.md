@@ -2,6 +2,35 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## v1.3.0（2026-09-23）— 双 profile：新增真人写实线 ＋ 企业化打地基（Eval/元数据/CI/密钥扫描）
+
+本版做两件事：①把"真人写实"从一个项目副本沉淀为**内置第二 profile**（一个 Skill 多 profile、不拆分）；②补上企业级最关键的地基——可评测、有元数据、提交自动测试。
+
+**新增真人写实第二 profile（gates-realhuman-v1）**
+- `profiles/gates-realhuman-v1.json`：7.3 头身、style_token `realphoto`、现实都市 world；G13 在真人线定义为"造型/换装变体"（非材质切换）；训练集 min_images=30。
+- `references/profile-realhuman.md`：只写与 3D 的差异，核心是**真实皮肤方法论**：
+  - 三件套：点名纹理（毛孔／刚刮净极淡青胡茬／鼻周耳侧泛红／自然哑光皮脂）＋换光学（85mm f/1.8、Kodak Portra 400 轻颗粒、RAW 直出零磨皮）＋强负向（塑料/打蜡/瓷釉/磨皮/3D/密胡茬/蜡黄）；
+  - 三版教训：v1 塑料废 → **v2「干净的真实」采用** → v3 密胡茬重瑕疵"太假太黄"废；**真实 ≠ 满脸瑕疵/蜡黄**；
+  - 光分景别：胸像用右前 45° 侧窗光显纹理，全身用正面柔和窗光，避免半脸暗/白底投影。
+- 脚本向后兼容适配：`kit_trainset.py`（dataset_slot、真人"手持-<名>"命名、min_images 可配）、`kit_asset_index.py`（G14 阈值/描述读 config）。
+
+**企业化打地基（Eval/元数据/CI/安全）**
+- 新增 `evals/` 三层评测框架：
+  - L1 触发：`trigger_tests.json`（24 case，含 4 真人话术）＋ `run_trigger_check.py`（Precision/Recall、分 profile、门禁判定）；
+  - L2 质量：`task_quality.json`（4 个真实任务，3D/真人 × 简单/标准/复杂，**A/B：裸模型 vs Skill，B−A 才是 Skill 净价值**）＋ `rubric.md`（五维度 0–5 锚点、真人皮肤 critical）；
+  - L3 一致性留第二阶段。
+- 新增 `skill.yaml`：多 profile 结构化元数据（工具、文件/网络访问范围、依赖、评测门禁）。
+- 新增 `scripts/bin/secret_scan.py`：纯标准库密钥扫描（掩码显示、占位豁免）。
+- 新增 `.github/workflows/ci.yml`：Python 3.10/3.12/3.14 矩阵自动跑单测＋密钥扫描。
+
+**认知更新（如实记录）**
+- 发现 `user_skills/character-asset-kit` 是指向本公开仓的**符号链接**——此前一度以为脚本适配只在"工作副本"，实际经软链已直接落在本仓；已据此净化文档内部代号，并用 .gitignore 排除过程备份（*.p40bak 等）与 evals 实测结果。
+- 防过工程：第一阶段只做最便宜高收益（单测 CI/触发评测/元数据），Eval 先做发版前手动门禁，红队/复杂日志按实际低风险降级。
+
+**验证与边界**
+- 全仓 **43 个单元测试全绿**；新增 JSON 全部合法；密钥扫描真实仓 0 命中；CI workflow 通过静态检查。
+- **尚未做（如实声明）**：L1/L2 的平台实测（每 case 3 次、A/B 人评）留发版前执行，故 skill.yaml evals 基线暂为 null；真人写实仅在豆包 seedream_5.0_pro 真机验证，其余运行时未做真人真机回归；CI 的真机运行以本次 push 结果为准。
+
 ## v1.2.2（2026-09-22）— 参考图配置：新增一个维度（六轮真机实测）
 
 追加密一个表情格时连出六张构图漂移的图，**前五轮全部失败，且没有一次是模型能力问题**——全是**参考图配置问题**。

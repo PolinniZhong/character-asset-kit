@@ -382,7 +382,10 @@ def g14_dataset_ok(char_dir, code):
         if not os.path.exists(man):
             return False
         rows = [l for l in open(man, encoding="utf-8") if l.strip()]
-        if len(rows) < 40:
+        cfg_p = os.path.join(char_dir, "11_训练素材", "trainset.config.json")
+        min_images = (json.load(open(cfg_p, encoding="utf-8")).get("min_images", 40)
+                      if os.path.exists(cfg_p) else 40)
+        if len(rows) < min_images:
             return False
         for fn in ("train.txt", "val.txt", "default_caption.txt",
                    "smoke_test_prompts.txt", "dataset.json"):
@@ -619,7 +622,7 @@ def check_registry(char_dir, reg, mf):
                             for m in media),
                 "style：至少 1 张已过门的风格母版（派生包按需增量）"),
         "G14": (lambda: g14_dataset_ok(char_dir, reg.get("code")),
-                "training：S1 数据集 ≥40 张、sidecar 全覆盖、val=5（详见 kit_trainset.py --check）"),
+                "training：S1 数据集 ≥min_images（默认40、真人线30）、sidecar 全覆盖、val=5（详见 kit_trainset.py --check）"),
     }
     gates = reg.get("gates") or {}
     for g, (fn, desc) in reqs.items():

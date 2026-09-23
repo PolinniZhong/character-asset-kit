@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "run_date": "YYYY-MM-DD",
+  "runtime": "doubao / seedream_5.0_pro",
+  "tester": "",
+  "note": "每个 case 在干净新会话单独发 3 次；true=平台加载了 character-asset-kit，false=未加载，null=尚未跑。",
+  "results": {
+    "S01": [null, null, null],
+    "S02": [null, null, null],
+    "S03": [null, null, null],
+    "S04": [null, null, null],
+    "S05": [null, null, null],
+    "S06": [null, null, null],
+    "S07": [null, null, null],
+    "S08": [null, null, null],
+    "S09": [null, null, null],
+    "S10": [null, null, null],
+    "S11": [null, null, null],
+    "S12": [null, null, null],
+    "S13": [null, null, null],
+    "S14": [null, null, null],
+    "N01": [null, null, null],
+    "N02": [null, null, null],
+    "N03": [null, null, null],
+    "N04": [null, null, null],
+    "N05": [null, null, null],
+    "N06": [null, null, null],
+    "N07": [null, null, null],
+    "N08": [null, null, null],
+    "N09": [null, null, null],
+    "N10": [null, null, null]
+  }
+}

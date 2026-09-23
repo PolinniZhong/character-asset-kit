@@ -1,0 +1,77 @@
+# character-asset-kit · 结构化元数据（Skill Manifest）
+# 本文件是 skill 的机器可读清单；人读说明见 SKILL.md。评测基线在评测跑完后回填，null＝尚未建立。
+id: character-asset-kit
+display_name: 千面工坊
+version: 1.3.0
+status: released               # development / released / deprecated
+release_date: 2026-09-23
+owner: PolinniZhong
+license: MIT
+repository: https://github.com/PolinniZhong/character-asset-kit
+entrypoint: SKILL.md
+keywords:
+  - character
+  - character-sheet
+  - aigc
+  - multiview
+  - expression-board
+  - pose-library
+  - lora-dataset
+  - consistency
+  - realhuman
+  - blindbox
+description: >-
+  多风格角色资产生产线：把一个新角色按企业级门径（G0–G14）做成可复用、可对账、
+  可训练备料的 AIGC 角色资产库。一个 Skill 内置多套风格 profile（3D 盲盒、真人写实），
+  门序列与确定性脚本复用，仅切换 profile。
+security_level: medium         # low / medium / high
+
+runtime:
+  required_tools: [image_gen, image_edit, Bash, Read, Write]
+  optional_tools: [computer_use_tool]
+  file_access: project_directory_only
+  network_access: image_api_providers_only
+  default_provider: doubao-native
+  default_image_model: seedream_5.0_pro
+  other_providers: [openrouter, google, openai, ark, custom]
+
+profiles:
+  - id: gates-blindbox3d-v1
+    display_name: 3D 盲盒风
+    profile_file: profiles/gates-blindbox3d-v1.json
+    default: true
+    head_ratio: 5.5
+    style_token: style3d
+    evals:
+      trigger_precision: null
+      task_completion: null
+  - id: gates-realhuman-v1
+    display_name: 真人写实风
+    profile_file: profiles/gates-realhuman-v1.json
+    default: false
+    head_ratio: 7.3
+    style_token: realphoto
+    evals:
+      trigger_precision: null
+      task_completion: null
+
+evals:
+  dir: evals
+  trigger_tests: evals/trigger_tests.json
+  task_quality: evals/task_quality.json
+  rubric: evals/rubric.md
+  trigger_stats: evals/run_trigger_check.py
+  gates:
+    trigger_precision_release: 0.90
+    task_completion_release: 0.85
+
+dependencies:
+  python: ">=3.10"
+  pip:
+    - Pillow
+  platform_extras:
+    macos: [swiftc, Vision.framework]
+
+delivery_contract:
+  status: null                 # 差距 11：下游交付契约计划在第二阶段成文（DELIVERY_CONTRACT.md）
+  version: null

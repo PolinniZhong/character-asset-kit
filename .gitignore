@@ -13,3 +13,15 @@ renditions/
 
 # 本地临时
 *.tmp
+
+# 备份文件（过程产物，不进仓）
+*.bak
+*.p40bak
+*.gatebak
+*.v2bak
+*.v3bak
+
+# evals 实测结果（框架与模板进仓，跑后结果不进；结果报告回内部目录）
+evals/trigger_results.json
+evals/quality_report*.md
+evals/consistency_report*.md

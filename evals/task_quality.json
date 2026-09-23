@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "skill_id": "character-asset-kit",
+  "layer": "L2-task-quality",
+  "description": "第二层·任务质量评测：固定一组从真实生产中选出的角色任务，A/B 对比『裸模型(A) vs 加载 Skill(B)』，B−A 才是 Skill 净价值。按 profile 各设任务。",
+  "method": {
+    "ab_protocol": {
+      "A": "裸模型：新会话、不加载本 skill，只给同一份角色需求，让其自由完成",
+      "B": "加载 Skill：同一份角色需求，按 skill 门径与脚本完成",
+      "same_inputs": "两组使用完全相同的角色需求、参考图、模型与画幅；只改变是否加载 skill",
+      "attribution": "身份一致性/返工率受模型影响大，看 B−A 差值归因；门径遵循/资产规范/提示词沉淀为 Skill 独有，直接评 B"
+    },
+    "rubric": "evals/rubric.md",
+    "scoring": "前期人工评分；LLM-as-judge 须先验证与人评一致性 ≥80% 才可使用",
+    "report": "结果写入 quality_report_v1.md（分 profile）",
+    "task_completion_pass": 0.85
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "profile": "gates-blindbox3d-v1",
+      "tier": "simple",
+      "name": "简单 3D 角色：发型＋服装＋基础表情",
+      "gates": ["G0", "G1", "G2", "G3"],
+      "deliverables": ["规格卡", "白底母版", "五视图", "6 基础表情（含表情板）"],
+      "key_metrics": ["任务完成率", "身份一致性", "平均返工次数", "耗时/工具调用数"],
+      "source": "提炼自已跑通的 3D 角色（非特定 IP）"
+    },
+    {
+      "id": "T2",
+      "profile": "gates-blindbox3d-v1",
+      "tier": "standard",
+      "name": "标准 3D 角色：完整 G0–G9",
+      "gates": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"],
+      "deliverables": ["母版", "五视图板", "表情板", "细节板", "营销胸像", "动作板",
+        "道具板", "角色设定板", "商卡", "台账全绿", "提示词库"],
+      "key_metrics": ["任务完成率", "身份一致性", "平均返工次数", "资产规范符合率", "提示词沉淀完整率", "耗时"],
+      "source": "提炼自已封存的 3D 角色生产线"
+    },
+    {
+      "id": "T3",
+      "profile": "gates-realhuman-v1",
+      "tier": "standard",
+      "name": "标准真人角色：都市男主完整 G0–G9",
+      "gates": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"],
+      "deliverables": ["母版（真实皮肤）", "五视图板", "表情板", "细节板", "营销胸像",
+        "动作板", "道具板", "角色设定板", "商卡", "台账全绿", "提示词库"],
+      "key_metrics": ["任务完成率", "身份一致性", "皮肤真实感(critical)", "平均返工次数", "资产规范符合率", "耗时"],
+      "source": "提炼自首个真人写实角色生产线（都市韩剧男主类型）"
+    },
+    {
+      "id": "T4",
+      "profile": "gates-realhuman-v1",
+      "tier": "complex",
+      "name": "复杂真人角色：道具＋动作＋造型变体＋场景",
+      "gates": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G12", "G13"],
+      "deliverables": ["完整 G0–G9 成品", "G7 道具手持全套", "G6 动作全套",
+        "G13 至少一个换装造型（造型母版＋五视图）", "G12 场景母版＋多场景"],
+      "key_metrics": ["任务完成率", "身份一致性", "皮肤真实感(critical)", "造型变体身份冻结",
+        "平均返工次数", "场景/服装一致性", "耗时"],
+      "source": "提炼自首个真人写实角色的扩展门实践"
+    }
+  ]
+}

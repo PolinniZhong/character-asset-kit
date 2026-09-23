@@ -1,6 +1,6 @@
 ---
 name: character-asset-kit
-description: 千面工坊·角色资产生产线（character-asset-kit）。当用户说"用千面工坊/角色生产线/建新角色/角色资产/角色库/character sheet/角色设定图板/多视图三视图/表情板/动作库/角色道具/角色商卡/角色 LoRA 数据集/角色一致性资产/按门径生产角色"时使用。把一个新角色（3D 卡通/盲盒手办风为主，也适配其他风格 profile）按企业级门径生产线做成可复用 AIGC 角色资产库——G0 立项规格卡、G1 白底母版、G2 五视图多视图、G3 表情、G4 细节特写、G5 营销胸像、G6 动作姿态、G7 单体道具与手持关系、G8 确定性拼板与角色设定商卡、G9 封存，以及扩展门 G10 微表情矩阵、G11 机位俯仰视线、G12 场景包、G13 风格变体、G14 LoRA 训练素材备料。内置确定性脚本（Pillow＋macOS Vision 抠图）负责落标准格、拼板、台账对账、训练集导出；生图由运行时 Agent 调图像生成模型完成（默认豆包 seedream_5.0_pro，亦支持 OpenRouter/Gemini/OpenAI/方舟/兼容网关）。不用于写文章配图（那是风格型插画 skill 的职责）、不做真人写实照片、不承诺库内训练 LoRA。
+description: 千面工坊·角色资产生产线（character-asset-kit）。当用户说"用千面工坊/角色生产线/建新角色/角色资产/角色库/character sheet/角色设定图板/多视图三视图/表情板/动作库/角色道具/角色商卡/角色 LoRA 数据集/角色一致性资产/按门径生产角色/真人写实角色/真人角色/写实数字人/都市剧真人卡"时使用。把一个新角色（内置两套风格 profile：3D 卡通/盲盒手办风、真人写实摄影风）按企业级门径生产线做成可复用 AIGC 角色资产库——G0 立项规格卡、G1 白底母版、G2 五视图多视图、G3 表情、G4 细节特写、G5 营销胸像、G6 动作姿态、G7 单体道具与手持关系、G8 确定性拼板与角色设定商卡、G9 封存，以及扩展门 G10 微表情矩阵、G11 机位俯仰视线、G12 场景包、G13 风格变体、G14 LoRA 训练素材备料。内置确定性脚本（Pillow＋macOS Vision 抠图）负责落标准格、拼板、台账对账、训练集导出；生图由运行时 Agent 调图像生成模型完成（默认豆包 seedream_5.0_pro，亦支持 OpenRouter/Gemini/OpenAI/方舟/兼容网关）。不用于写文章配图（那是风格型插画 skill 的职责）、不承诺库内训练 LoRA。
 ---
 
 # 千面工坊 · 角色资产生产线（character-asset-kit）
@@ -9,10 +9,11 @@ description: 千面工坊·角色资产生产线（character-asset-kit）。当�
 
 把"一个新角色"做成**可复用、可对账、可训练备料**的整套资产：身份签名先冻结，再逐单元生成、逐门验收，确定性脚本负责一切像素排版与台账。方法论来自一条真实跑通的生产线（两个角色走完 G0–G14、第三个角色 G0–G12 自用验证）与 210 张受控复现实验；门径、插槽、风格全部 **profile 化**，本 skill 不绑定任何具体角色或具体画风。
 
-**版本 v1.2.2（2026-09-22）**：
+**版本 v1.3.0（2026-09-23）**：
 - **v1.2**：生图运行时层解耦——默认仍走豆包 `seedream_5.0_pro`，新增 `kit_generate.py`（纯标准库）支持 OpenRouter 统一网关 / Google Gemini / OpenAI gpt-image / 火山方舟 / 任意兼容网关，含模型解析优先级、参考图上限预检、`--dry-run`、限流重试、非 PNG 归一；新增 `references/runtime-portability.md`（提供商矩阵与最小再验证）。
 - **v1.2.1（方舟真机验证修复）**：持密钥打通 `--provider ark` 后修掉四条**静态检查抓不到**的缺陷——图生图端点（方舟无 `/images/edits`，改走 `/images/generations` + JSON `image`）、**零水印**（方舟不传 `watermark` 默认 `true`，现始终显式 `false`）、错误分类（`BrokenPipeError` 不再被写成"网络不可达"）、密钥候选（`key_env` 支持候选表）。
 - **v1.2.2（参考图配置：新增一个维度）**：`prompt-rewrite-rules.md` **新增 §7**——**构图锚必须与目标构图同景别、且一次只给一个**；混景别双锚（如全身母版＋胸像锚）时模型**两张都不跟、把主体撑满整幅**；成品资产不能当构图锚。坏例 **BC-34**。
+- **v1.3（双 profile）**：新增**真人写实第二 profile** `profiles/gates-realhuman-v1.json`（7.3 头身、真实皮肤方法论、现实都市 world、G13 改为造型变体、训练集 min_images=30）＋ `references/profile-realhuman.md`；脚本向后兼容（dataset_slot／真人手持命名／可配 min_images）。**一个 Skill 多 profile、不拆分**；真人线目前仅豆包 seedream_5.0_pro 完成真机验证。
 - v1.1：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。
 
 ## 硬约束（任何门都适用）
@@ -74,12 +75,12 @@ description: 千面工坊·角色资产生产线（character-asset-kit）。当�
 
 ## 按需加载（不要一次读完）
 
-1. 新对话/新角色开工：读本文件 + `references/gates-g0-g9.md §0、§G0、§G1` + `references/style-profiles.md`。
+1. 新对话/新角色开工：**先确认风格 profile（3D 盲盒＝gates-blindbox3d-v1 / 真人写实＝gates-realhuman-v1）**；读本文件 + `references/gates-g0-g9.md §0、§G0、§G1` + `references/style-profiles.md`；真人线加读 `references/profile-realhuman.md`。
 2. 到哪一门读 `gates-g0-g9.md` 对应一节；写提示词前读 `references/prompt-framework.md` 对应单元模板。
 3. 提示词被模型"不听"、出崩图：读 `references/prompt-rewrite-rules.md`（210 张实验总结的改写配方 A/B/C）与 `references/bad-cases.md`。
 4. 每门验收前：读 `references/acceptance-checklists.md` 对应清单；台账 E/W 码含义查 `references/registry-rules.md`。
 5. 用户要扩展门：读 `references/gates-g10-g14.md` 对应章节。
-6. 换画风/换门径/换插槽：读 `references/style-profiles.md` 与 `profiles/gates-blindbox3d-v1.json`，另存 profile，不改默认文件；门裁剪副本放库根 `profiles/`，命名见 style-profiles §5。
+6. 换画风/换门径/换插槽：读 `references/style-profiles.md` 与对应内置 profile（`profiles/gates-blindbox3d-v1.json` 或 `profiles/gates-realhuman-v1.json`，真人增量见 `references/profile-realhuman.md`），另存 profile 副本、不改内置文件；门裁剪副本放库根 `profiles/`，命名见 style-profiles §5。
 7. 换生图模型/运行时（OpenAI、方舟、兼容网关、本地 CUDA）：读 `references/runtime-portability.md`，按 profile 的 `runtime` 块配置，并跑该文 §4 的最小再验证后再批量生产。
 
 ## 脚本速查（库根＝存放角色包的目录；脚本路径相对本 skill）

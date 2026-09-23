@@ -1,0 +1,133 @@
+{
+  "profile_id": "gates-realhuman-v1",
+  "display_name": "真人写实角色生产线（G0–G14）",
+  "version": "v1.0",
+  "head_ratio": 7.3,
+  "head_ratio_note": "成人真人约 7–8 头身，默认 7.3；性别/身高/年龄由规格卡定义，不做 Q 版化",
+  "style_token": "realphoto",
+  "material": "真人写实摄影质感的年轻成人人物，未精修原片直出、零磨皮零美颜：真实皮肤可见自然毛孔与皮纹颗粒；男性角色可有刚刮净的极淡青色胡茬影（不浓密、不连片、不邋遢）；鼻周与耳侧轻微自然泛红；鼻头/额头/手背自然皮脂的微弱哑光油光（区别于打蜡/塑料/瓷釉高光）；肤色健康通透、有真实细微不匀，不泛黄不发暗、不偏色；全画幅 85mm f/1.8、Kodak Portra 400 质感加轻微胶片颗粒、纪实人像；胸像与面部特写用右前方 45 度柔和侧窗光扫出皮肤纹理，全身母版与五视图用正面为主、轻微方向的柔和窗光（保证各角度服装色一致、不半脸暗、白底无投影）；真实毛发纤维与发丝层次、真实布料纹理与自然褶皱、真实人体解剖与军人/训练体态；非 3D 渲染、非卡通、非插画、非手办、非塑料/蜡像皮肤",
+  "background": {
+    "default": "纯白摄影棚背景 #FFFFFF，均匀柔和棚拍光，脚下自然柔和的中性灰接触阴影",
+    "world": "现代都市写实环境：城市街头、写字楼与公寓、咖啡厅、通勤场景等真实空间，自然光影、电影感色调；具体城市/季节/职业由规格卡定义；禁止卡通化与风格化渲染"
+  },
+  "forbidden": [
+    "画面零文字/字母/数字/logo/水印/标注线（规格卡登记的签名印花除外）",
+    "无第二人物、无界面窗口、无对话框、无标牌",
+    "禁止 3D 渲染感、卡通化、手办质感、塑料/打蜡/瓷釉/陶瓷/娃娃/橡胶皮肤、蜡像感、磨皮过度、Airbrush、光滑无瑕、均匀假脸、数字 HDR、油腻高光、插画感、动漫风、赛璐璐",
+    "禁止满脸瑕疵痘印、肤色泛黄发暗偏色、蜡黄沧桑；男性角色禁止密胡茬/根根短须/连片胡茬（只允许刚刮净的极淡青色影）",
+    "全身母版与五视图禁止强烈侧光造成半脸暗或白底投影（45 度侧窗光仅用于胸像/面部特写）",
+    "禁止 Q 版头身比、夸张五官比例、萌系大眼、网红滤镜脸、过度美颜、与角色设定不符的妆容",
+    "禁止牙齿崩坏、手指畸形/多指/融指、五官不对称、双眼大小不一",
+    "无彩虹色、紫粉渐变、重度光污染、满版噪点"
+  ],
+  "canvas": {
+    "standard_cell": [1773, 2364],
+    "square_cell": [2048, 2048],
+    "scene_vertical": [1773, 2364],
+    "scene_horizontal": [2560, 1440],
+    "character_sheet": [2430, 3240],
+    "standard_cell_fig_ratio": 0.80,
+    "standard_cell_sole_y": 2080,
+    "bust_fig_ratio": 0.925,
+    "square_detail_bbox": 0.86,
+    "square_prop_bbox": 0.72,
+    "contact_shadow_rgba": [40, 40, 40, 20],
+    "contact_shadow_blur": 16
+  },
+  "slots": {
+    "G1": "01_母版",
+    "G2": "02_多视图",
+    "G11_gaze": "02_多视图/俯仰视线",
+    "G3": "03_表情",
+    "G10": "03_表情/微表情矩阵",
+    "G4": "04_细节特写",
+    "G5": "05_营销胸像",
+    "G6": "06_动作姿态",
+    "G7": "07_道具",
+    "prompts": "08_提示词库",
+    "G13": "09_风格变体",
+    "G8": "10_商卡成品",
+    "G14": "11_训练素材",
+    "G12": "12_场景包",
+    "wip": "99_过程稿"
+  },
+  "gates": [
+    {"id": "G0", "name": "立项", "core": true, "outputs": ["规格卡", "资产清单", "目录树"], "script": "kit_init_character.py"},
+    {"id": "G1", "name": "白底母版", "core": true, "outputs": ["白底母版", "透明母版"], "script": "kit_standard_cell.py"},
+    {"id": "G2", "name": "五视图多视图", "core": true, "outputs": ["五视图单图", "多视图板"], "board": "multiview"},
+    {"id": "G3", "name": "基础表情", "core": true, "outputs": ["6 表情头肩", "表情板"], "board": "expression"},
+    {"id": "G4", "name": "细节特写", "core": true, "outputs": ["6 细节方格", "细节板"], "board": "detail"},
+    {"id": "G5", "name": "营销胸像", "core": true, "outputs": ["前3/4胸像"]},
+    {"id": "G6", "name": "动作姿态", "core": true, "outputs": ["A/B 组动作", "动作板"], "board": "pose"},
+    {"id": "G7", "name": "道具", "core": true, "outputs": ["单体图", "比例对照", "手持关系", "道具板"], "board": "prop"},
+    {"id": "G8", "name": "拼板与商卡", "core": true, "outputs": ["角色设定板", "商卡"], "board": "character_sheet/card"},
+    {"id": "G9", "name": "封存", "core": true, "outputs": ["台账全绿", "提示词归档"], "script": "kit_asset_index.py"},
+    {"id": "G10", "name": "微表情矩阵", "core": false, "outputs": ["4族x3档+中性=13格", "微表情板"], "board": "micro_expression", "note": "真人线默认裁剪、按需启用"},
+    {"id": "G11", "name": "机位俯仰视线", "core": false, "outputs": ["俯仰2", "视线4", "机位视线板"], "board": "gaze"},
+    {"id": "G12", "name": "场景包", "core": false, "outputs": ["场景母版", "5场景竖/横", "总览板"], "script": "kit_scene_board.py"},
+    {"id": "G13", "name": "造型变体", "core": false, "outputs": ["造型母版", "五视图", "表情"], "script": "kit_style_board.py", "note": "真人线＝换造型/服装，不换材质画风"},
+    {"id": "G14", "name": "训练素材备料", "core": false, "outputs": ["数据集(双caption/分层val)", "训练外指南"], "script": "kit_trainset.py", "note": "库内不训练；真人 min_images=30"}
+  ],
+  "units": {
+    "expressions": [
+      {"key": "0中性", "slug": "expr0-neutral", "en": "neutral relaxed expression"},
+      {"key": "1微笑", "slug": "expr1-smile", "en": "subtle closed-mouth confident smile"},
+      {"key": "2思考", "slug": "expr2-thinking", "en": "thoughtful contemplative expression"},
+      {"key": "3露齿笑", "slug": "expr3-toothy-smile", "en": "natural open-mouth smile showing teeth"},
+      {"key": "4惊讶", "slug": "expr4-surprised", "en": "mildly surprised raised eyebrow"},
+      {"key": "5严肃", "slug": "expr5-serious", "en": "serious focused expression"}
+    ],
+    "micro_families": ["E1喜悦", "E2惊讶", "E3思考", "E4严肃"],
+    "micro_levels": ["L1", "L2", "L3"],
+    "poses": {
+      "A1挥手": "waving one hand in casual greeting",
+      "A2抱胸": "arms crossed",
+      "A3插兜": "one or both hands in pants pockets",
+      "A4整理袖口": "adjusting shirt cuff",
+      "A5看表": "checking a wristwatch",
+      "B1行走": "natural confident walking stride",
+      "B2端坐": "sitting upright with good posture",
+      "B3靠墙": "leaning against a wall",
+      "B4奔跑": "running"
+    },
+    "held": {
+      "C1看手机": "looking at a smartphone",
+      "C2持咖啡": "holding a takeaway coffee cup",
+      "C3拎包": "carrying a briefcase or shoulder bag",
+      "C4持平板": "holding a tablet or laptop computer"
+    },
+    "scenes": ["SCN-01 都市街头行走", "SCN-02 写字楼/办公室", "SCN-03 咖啡厅", "SCN-04 公寓窗边", "SCN-05 夜景通勤"]
+  },
+  "style_slots": [
+    {"slot": "R1", "name": "默认造型（主资产线）", "is_primary": true},
+    {"slot": "R2", "name": "商务正装", "status": "optional"},
+    {"slot": "R3", "name": "休闲日常", "status": "optional"},
+    {"slot": "R4", "name": "运动/其他造型", "status": "optional"}
+  ],
+  "style_slots_note": "真人线 G13 的『风格变体』＝造型/服装变体（different outfits），不是材质或画风切换；身份层（发型签名/五官/头身/配饰）必须冻结。",
+  "runtime": {
+    "default": "doubao-native",
+    "providers": {
+      "doubao-native": {
+        "kind": "host-tools",
+        "gen_tool": "image_gen",
+        "edit_tool": "image_edit",
+        "model": "seedream_5.0_pro",
+        "multi_ref": true,
+        "native_sizes": true,
+        "note": "豆包运行时默认；每请求单图，参考图实际传入 image_reference_url_list；真人写实已完成真机回归（首个真人角色）"
+      }
+    },
+    "other_providers": "openrouter / google / openai / ark / custom 的能力表与配置同 gates-blindbox3d-v1.json 的 runtime 块及 references/runtime-portability.md；真人写实风格目前仅豆包完成真机验证，其余提供商均未做真人写实真机回归，接入前必须跑最小再验证，不得假设服从度一致。",
+    "switch_rule": "真人写实默认且已验证豆包 seedream_5.0_pro；换提供商/模型须重跑 G1/G2/G3/G7 最小再验证，prompt-rewrite-rules 的服从度结论不得跨模型照搬。"
+  },
+  "trainset": {
+    "slot_dir": "R1-真人写实_v1.0",
+    "min_images": 30,
+    "target_count": 47,
+    "framing_repeats": {"face": 12, "medium": 8, "full": 6},
+    "val_count": 5,
+    "config_template": "../../templates/trainset.config.example.json",
+    "note": "真人写实下限 min_images=30（kit_trainset/kit_asset_index 读 config，缺省 40）；目标区间 30–47，不删全身图"
+  }
+}

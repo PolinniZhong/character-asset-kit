@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "skill_id": "character-asset-kit",
+  "layer": "L1-trigger",
+  "description": "第一层·触发评测：给定一句话，观测平台是否正确路由加载本 skill（该触发时触发、不该触发时沉默）。",
+  "method": {
+    "runs_per_case": 3,
+    "how_to_run": "每个 case 在一个干净的新会话里单独发送（不带本 skill 的上下文），观测平台是否加载 character-asset-kit；3 次结果记入 trigger_results.json，用 run_trigger_check.py 算指标。",
+    "record_file": "evals/trigger_results.json（模板见 trigger_results.example.json）",
+    "stats_script": "evals/run_trigger_check.py",
+    "pass_gate_initial": {
+      "should_trigger_rate_min": 0.5,
+      "should_not_trigger_rate_max": 0.5,
+      "note": "第一层宽松线（报告 v1.1）"
+    },
+    "pass_gate_release": {
+      "precision_min": 0.9,
+      "recall_min": 0.9,
+      "note": "发版门禁线（报告 v1.1 验收标准）"
+    }
+  },
+  "cases": [
+    {"id": "S01", "expect": "trigger", "profile": "any", "text": "帮我建一个新角色"},
+    {"id": "S02", "expect": "trigger", "profile": "blindbox3d", "text": "用千面工坊做个盲盒风角色"},
+    {"id": "S03", "expect": "trigger", "profile": "any", "text": "我想做一套角色资产库"},
+    {"id": "S04", "expect": "trigger", "profile": "any", "text": "给这个角色出三视图和表情板"},
+    {"id": "S05", "expect": "trigger", "profile": "any", "text": "按门径生产一个角色"},
+    {"id": "S06", "expect": "trigger", "profile": "any", "text": "做个 character sheet"},
+    {"id": "S07", "expect": "trigger", "profile": "any", "text": "我要一个能反复用的 IP 角色"},
+    {"id": "S08", "expect": "trigger", "profile": "any", "text": "帮我生产角色设定图板"},
+    {"id": "S09", "expect": "trigger", "profile": "any", "text": "做角色多视图和动作库"},
+    {"id": "S10", "expect": "trigger", "profile": "blindbox3d", "text": "建一个 3D 卡通角色的完整资产"},
+    {"id": "S11", "expect": "trigger", "profile": "realhuman", "text": "帮我做一个真人写实风格的角色"},
+    {"id": "S12", "expect": "trigger", "profile": "realhuman", "text": "我要一个都市韩剧男主，真人照片那种质感"},
+    {"id": "S13", "expect": "trigger", "profile": "realhuman", "text": "做个写实数字人，皮肤要真实、不要塑料感"},
+    {"id": "S14", "expect": "trigger", "profile": "realhuman", "text": "用真人写实 profile 生产一个都市男角色"},
+
+    {"id": "N01", "expect": "no_trigger", "profile": "none", "text": "帮我写一篇公众号文章"},
+    {"id": "N02", "expect": "no_trigger", "profile": "none", "text": "画一张文章配图"},
+    {"id": "N03", "expect": "no_trigger", "profile": "none", "text": "给我做个海报"},
+    {"id": "N04", "expect": "no_trigger", "profile": "none", "text": "写个 Python 脚本"},
+    {"id": "N05", "expect": "no_trigger", "profile": "none", "text": "帮我 P 一下这张图"},
+    {"id": "N06", "expect": "no_trigger", "profile": "none", "text": "做个电商商品详情图"},
+    {"id": "N07", "expect": "no_trigger", "profile": "none", "text": "画个风景插画"},
+    {"id": "N08", "expect": "no_trigger", "profile": "none", "text": "帮我设计 logo"},
+    {"id": "N09", "expect": "no_trigger", "profile": "none", "text": "给这张图换个背景"},
+    {"id": "N10", "expect": "no_trigger", "profile": "none", "text": "做个表情包"}
+  ]
+}

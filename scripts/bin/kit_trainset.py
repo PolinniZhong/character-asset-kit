@@ -236,21 +236,32 @@ def select_units(char_dir, cfg):
     # G7 仅手持关系（medium）；单体道具/配饰排除
     d7 = os.path.join(char_dir, "07_道具")
     if os.path.isdir(d7):
+        held_idx = 0
         for root, _, files in os.walk(d7):
-            if "拼板" in root.split(os.sep):
+            parts = root.split(os.sep)
+            if "拼板" in parts or "手持关系" not in parts:
                 continue
             for n in sorted(files):
-                if not (n.endswith("_白.png") and "手持关系" in n):
+                if not n.endswith("_白.png"):
                     continue
                 p = os.path.join(root, n)
+                # 旧 3D 命名「手持关系-C1xxx」；真人命名「手持-<名>_v」
                 m = re.search(r"手持关系-(C\d[^_]+)", n)
-                if not m:
-                    continue
-                key = m.group(1)
-                ccode = key[:2]
+                if m:
+                    key = m.group(1)
+                    slug = f"held-{key[:2]}"
+                    zh = f"手持关系-{key}"
+                else:
+                    m = re.search(r"手持-([^_]+?)_v", n)
+                    if not m:
+                        continue
+                    key = m.group(1)
+                    held_idx += 1
+                    slug = f"held-H{held_idx}"
+                    zh = f"手持-{key}"
                 en = held_map.get(key)
                 if en:
-                    add(p, "G7", f"held-{ccode}", "medium", f"medium shot, {en}", f"手持关系-{key}")
+                    add(p, "G7", slug, "medium", f"medium shot, {en}", zh)
     return units
 
 
@@ -259,7 +270,8 @@ def select_units(char_dir, cfg):
 def build_char(char_dir, wipe=True):
     cfg = load_config(char_dir)
     code, trig = cfg["code"], cfg["trigger"]
-    out_dir = os.path.join(char_dir, "11_训练素材", "datasets", SLOT)
+    slot = cfg.get("dataset_slot", SLOT)
+    out_dir = os.path.join(char_dir, "11_训练素材", "datasets", slot)
     if wipe and os.path.isdir(out_dir):
         shutil.rmtree(out_dir)
 
@@ -354,6 +366,7 @@ def training_guide(cfg, summary):
     trig, code = cfg["trigger"], cfg["code"]
     style = cfg["style_token"]
     gender = cfg.get("gender", "character")
+    slot = cfg.get("dataset_slot", SLOT)
     c = summary["counts"]
     return f"""# {code} 训练外执行指南 v1.0（LoRA）
 
@@ -363,7 +376,7 @@ def training_guide(cfg, summary):
 
 ## 1. 数据集在哪、怎么用
 
-- 位置：本目录下 `datasets/{SLOT}/`
+- 位置：本目录下 `datasets/{slot}/`
 - 规模：{c['total']} 张（face {c['face']} / medium {c['medium']} / full {c['full']}），val 固定 {summary['val_count']} 张。
 - 图片是定稿资产的**字节级副本**，未缩放未重压；对齐/裁切/桶形分辨率由训练器处理。
 
@@ -421,7 +434,8 @@ def build(root, pkg=None):
     for char_dir in pkg_dirs:
         print(f"[build] {os.path.basename(char_dir)}")
         s = build_char(char_dir)
-        rel = os.path.join(os.path.basename(char_dir), "11_训练素材", "datasets", SLOT)
+        slot = load_config(char_dir).get("dataset_slot", SLOT)
+        rel = os.path.join(os.path.basename(char_dir), "11_训练素材", "datasets", slot)
         print(f"   → {rel}")
         print(f"   face {s['counts']['face']} / medium {s['counts']['medium']} / "
               f"full {s['counts']['full']}，合计 {s['counts']['total']}，val {s['val_count']}")
@@ -437,7 +451,8 @@ FORBIDDEN_TOKENS = ("拼板", "验收版", "干净版", "商卡", "_透明", "�
 def check_char(char_dir):
     cfg = load_config(char_dir)
     root = os.path.dirname(char_dir)
-    out_dir = os.path.join(char_dir, "11_训练素材", "datasets", SLOT)
+    slot = cfg.get("dataset_slot", SLOT)
+    out_dir = os.path.join(char_dir, "11_训练素材", "datasets", slot)
     errs, warns = [], []
     if not os.path.isdir(out_dir):
         return [f"数据集目录不存在：{os.path.relpath(out_dir, root)}"], warns
@@ -447,8 +462,9 @@ def check_char(char_dir):
         errs.append("缺 manifest.jsonl")
         return errs, warns
     records = [json.loads(l) for l in open(manifest, encoding="utf-8") if l.strip()]
-    if len(records) < 40:
-        errs.append(f"图片数 {len(records)} < 40")
+    min_images = cfg.get("min_images", 40)
+    if len(records) < min_images:
+        errs.append(f"图片数 {len(records)} < {min_images}")
 
     for r in records:
         src_chain = r["source"]
