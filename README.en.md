@@ -20,11 +20,13 @@
 
 ![A broken cell is re-generated alone: single-unit generation plus deterministic assembly keeps a failure from spreading to the board](docs/images/compare-one-shot.jpg)
 
-## Status
+## Status (latest v1.3.0, 2026-09-23)
 
-- The methodology was proven end-to-end on two complete characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media items, 17 derived deliverables, sealed with 0 ERROR / 0 WARN). The 8 gaps it exposed have all been fixed — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md) (Chinese).
-- Style, gate set, directory slots, and canvas sizes are all **profile-driven**. The default profile is a Pixar/blind-box-toy 3D look (`gates-blindbox3d-v1`) — it is **just an example**, not bound to any specific character.
-- [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) ships a set of **desensitized real deliverable boards** (10 images, G2–G12) so you can see the actual output.
+- **Two built-in style profiles**: `gates-blindbox3d-v1` (3D blind-box toy, default) and **`gates-realhuman-v1` (photorealistic photography)** — the gates and deterministic scripts are fully reused; switching style only switches the profile. The real-human line centers on a "real-skin methodology" (visible pores / very faint clean-shaven stubble / natural matte sebum + 85mm film optics, zero skin smoothing) to avoid a plastic/wax look.
+- The methodology was proven end-to-end on two complete 3D characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media, 17 derived deliverables, sealed 0 ERROR / 0 WARN — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md)). The real-human profile was also validated on a complete photorealistic character (G0–G14).
+- Style, gate set, slots, and canvases are all **profile-driven**, **not bound to any character or style**; adding a style only needs selecting/copying a profile.
+- **Evaluation & engineering**: [`evals/`](evals/) provides L1 trigger tests, L2 quality A/B (bare model vs Skill) and a five-dimension rubric; `skill.yaml` is structured metadata; GitHub Actions CI (Python 3.10/3.12/3.14) runs unit tests and secret scanning.
+- [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) ships **desensitized real deliverable boards** (10 images, G2–G12).
 
 ![G0–G14 gate map: one sign-off per gate; the registry must show 0 ERROR before sealing](docs/images/pipeline-gates.png)
 
@@ -47,13 +49,14 @@ character-asset-kit/
 │   ├── registry-rules.md        #   Registry E/W rule codes
 │   ├── runtime-portability.md   #   Multi-provider image backends + minimal re-validation
 │   └── style-profiles.md        #   Changing style / trimming gates
-├── profiles/gates-blindbox3d-v1.json  # Example profile (gates / slots / canvases / units)
+├── profiles/                    # Style profiles: gates-blindbox3d-v1 (3D, default) / gates-realhuman-v1 (photorealistic)
+├── evals/                       # L1 trigger tests, L2 quality A/B tasks + rubric, stats script
 ├── templates/                   # Spec card, asset manifest, training config templates
 ├── scripts/                     # Deterministic steps (Python 3.10+ / Pillow)
 │   ├── charkit/                 #   Cutout, standard cells, nine board builders, fonts
 │   └── bin/                     #   init / standard_cell / colorkey_cutout /
 │                                #   build_board / asset_index / scene_board /
-│                                #   style_board / trainset / generate (+ subjectmask.swift)
+│                                #   style_board / trainset / generate / secret_scan (+ subjectmask.swift)
 ├── tests/                       # Stdlib-only unittest (no network, no macOS Vision dependency)
 ├── examples/                    # Desensitized end-to-end walkthrough
 └── docs/                        # PRD / DESIGN (SDD) / DOGFOODING (Chinese)
@@ -118,7 +121,7 @@ Gates, prompt framework, cell normalization, boards and ledgers are model-agnost
 - Python 3.10+ and Pillow (`pip install pillow`). No other required Python dependencies.
 - Automatic cutout (subjectmask) uses **macOS Vision**: Swift source ships in the repo and is compiled with `swiftc` on first init (source only, no binaries). On other platforms, cut out with any tool and pass `--already-cutout`, or use the cross-platform color-key script `kit_colorkey_cutout.py` for pure-white seamless backgrounds.
 - The image model is provided by the runtime: Doubao `seedream_5.0_pro` by default, or OpenRouter/Gemini/OpenAI/Ark/compatible gateways via `kit_generate.py` — see [runtime-portability.md](references/runtime-portability.md).
-- Board labels use Hiragino Sans GB by default (shipped with macOS); on other platforms point the builders at an available CJK font.
+- Cross-platform CJK font fallback: PingFang/Hiragino on macOS, Noto Sans CJK/WenQuanYi on Linux (CI installs fonts-noto-cjk).
 
 ## Tests
 
@@ -129,7 +132,7 @@ python3 -m unittest discover -s tests -v
 ## Scope limits
 
 - **No LoRA training itself**: G14 only produces the dataset (dual caption profiles, stratified val, hash checks) plus an out-of-repo execution guide; training happens outside (kohya / ai-toolkit).
-- Not for article illustration, photorealistic humans, or imitating living artists.
+- Not for article illustration or imitating living artists; photorealistic humans are supported by the `gates-realhuman-v1` profile (non-default, chosen explicitly at kickoff).
 - Scripts handle deterministic pixel work and registry bookkeeping only; they make no aesthetic judgments. Gate decisions belong to humans.
 - No pip package: the caller is an Agent — just copy the Skill directory.
 

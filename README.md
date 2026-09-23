@@ -20,10 +20,12 @@ English: [README.en.md](README.en.md)
 
 ![崩一格只重跑一格：逐张生成＋确定性拼板，废稿不向其他格扩散](docs/images/compare-one-shot.jpg)
 
-## 现状
+## 现状（最新 v1.3.0，2026-09-23）
 
-- 方法论在两个完整角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN），暴露的 8 条缺口已全部修复，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)。
-- 画风、门集合、插槽、画幅全部 **profile 化**；默认 profile 是皮克斯/盲盒手办感 3D（`gates-blindbox3d-v1`），**只是一个示例**，不绑定任何具体角色。
+- **内置两套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）与 **`gates-realhuman-v1`（真人写实摄影）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」（毛孔/极淡青胡茬/自然哑光皮脂＋85mm 胶片光学、零磨皮，避免塑料/打蜡感）。
+- 方法论在两个完整 3D 角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)）；真人写实 profile 也已在一个完整真人角色（G0–G14）上实证。
+- 画风、门集合、插槽、画幅全部 **profile 化**，**不绑定任何角色或画风**；新增风格只需选/复制 profile。
+- **评测与工程化**：[`evals/`](evals/) 提供 L1 触发测试、L2 质量 A/B（裸模型 vs Skill）与五维 rubric；`skill.yaml` 为结构化元数据；GitHub Actions CI（Python 3.10/3.12/3.14）自动跑单测与密钥扫描。
 - [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) 提供一套真实产线输出的**脱敏成品板**（10 张，G2–G12），可直接查看各板型长相。
 
 ![G0–G14 门径总览：每门一次验收，台账 0 ERROR 才封存](docs/images/pipeline-gates.png)
@@ -47,13 +49,14 @@ character-asset-kit/
 │   ├── registry-rules.md        #   台账 E/W 规则码
 │   ├── runtime-portability.md   #   跨模型/跨运行时移植与最小再验证
 │   └── style-profiles.md        #   怎么换画风/裁剪门
-├── profiles/gates-blindbox3d-v1.json  # 示例 profile（门/插槽/画幅/单元/运行时）
+├── profiles/                    # 风格 profile：gates-blindbox3d-v1（3D，默认）/ gates-realhuman-v1（真人写实）
+├── evals/                       # L1 触发测试、L2 质量 A/B 任务与 rubric、统计脚本
 ├── templates/                   # 规格卡、资产清单、训练配置模板
 ├── scripts/                     # 确定性工序（Python 3.10+ / Pillow）
 │   ├── charkit/                 #   抠图、标准格、九种拼板、字体
 │   └── bin/                     #   init / generate / standard_cell / colorkey_cutout /
 │                                #   build_board / asset_index / scene_board /
-│                                #   style_board / trainset（+ subjectmask.swift）
+│                                #   style_board / trainset / secret_scan（+ subjectmask.swift）
 ├── tests/                       # 纯标准库 unittest（不联网、不依赖 macOS Vision）
 ├── examples/                    # 脱敏的端到端走查
 └── docs/                        # PRD / DESIGN（SDD）/ DOGFOODING
@@ -118,7 +121,7 @@ python3 scripts/bin/kit_generate.py --provider google --mode edit \
 - Python 3.10+、Pillow（`pip install pillow`），纯 Python 侧无其他必需依赖。
 - 自动抠图（subjectmask）依赖 **macOS Vision**：Swift 源码随仓，首次 init 自动 `swiftc` 编译（只发源码不发二进制）。非 macOS 用任意抠图工具后传 `--already-cutout`，或对纯白底素材用跨平台色键脚本 `kit_colorkey_cutout.py`。
 - 生图模型与工具由运行时提供；默认绑定豆包 `seedream_5.0_pro`，OpenRouter/Gemini/OpenAI/方舟/兼容网关走 `kit_generate.py`，详见 [runtime-portability.md](references/runtime-portability.md)。
-- 中文字体默认冬青黑体（macOS 自带）；其他平台需为拼板指定可用 CJK 字体。
+- 中文字体跨平台回退：macOS 苹方/冬青黑体，Linux Noto Sans CJK/文泉驿（CI 自动安装 fonts-noto-cjk）。
 
 ## 测试
 
@@ -129,7 +132,7 @@ python3 -m unittest discover -s tests -v
 ## 边界
 
 - **不做 LoRA 训练本身**：G14 只产出数据集（双 caption profile、分层 val、哈希校验）与训练外执行指南，训练在库外（kohya / ai-toolkit）。
-- 不做文章配图型插画、不做真人写实照片、不模仿在世艺术家。
+- 不做文章配图型插画、不模仿在世艺术家；真人写实摄影由 `gates-realhuman-v1` profile 支持（非默认，开工时显式选择）。
 - 脚本只做确定性像素工序与台账，不做审美判断；过门决策在人。
 - 不发 pip 包：调用方是 Agent，复制 Skill 目录即用。
 
