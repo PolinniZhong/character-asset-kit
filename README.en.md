@@ -121,7 +121,7 @@ Gates, prompt framework, cell normalization, boards and ledgers are model-agnost
 - Python 3.10+ and Pillow (`pip install pillow`). No other required Python dependencies.
 - Automatic cutout (subjectmask) uses **macOS Vision**: Swift source ships in the repo and is compiled with `swiftc` on first init (source only, no binaries). On other platforms, cut out with any tool and pass `--already-cutout`, or use the cross-platform color-key script `kit_colorkey_cutout.py` for pure-white seamless backgrounds.
 - The image model is provided by the runtime: Doubao `seedream_5.0_pro` by default, or OpenRouter/Gemini/OpenAI/Ark/compatible gateways via `kit_generate.py` — see [runtime-portability.md](references/runtime-portability.md).
-- Cross-platform CJK font fallback: PingFang/Hiragino on macOS, Noto Sans CJK/WenQuanYi on Linux (CI installs fonts-noto-cjk).
+- Cross-platform CJK font fallback (required for board/card titles): PingFang/Hiragino on macOS → Noto Sans CJK/WenQuanYi/Droid on Linux (CI installs `fonts-noto-cjk`) → Microsoft YaHei/SimHei on Windows. **On any platform you can override explicitly with `CHARKIT_FONT=/path/to/font.ttc` (plus `CHARKIT_FONT_INDEX`, `CHARKIT_FONT_BOLD`)** — useful for slim images or containers without preinstalled CJK fonts. When no font is found, the error message prints the install/override command for your platform.
 
 ## Tests
 

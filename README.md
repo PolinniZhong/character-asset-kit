@@ -121,7 +121,7 @@ python3 scripts/bin/kit_generate.py --provider google --mode edit \
 - Python 3.10+、Pillow（`pip install pillow`），纯 Python 侧无其他必需依赖。
 - 自动抠图（subjectmask）依赖 **macOS Vision**：Swift 源码随仓，首次 init 自动 `swiftc` 编译（只发源码不发二进制）。非 macOS 用任意抠图工具后传 `--already-cutout`，或对纯白底素材用跨平台色键脚本 `kit_colorkey_cutout.py`。
 - 生图模型与工具由运行时提供；默认绑定豆包 `seedream_5.0_pro`，OpenRouter/Gemini/OpenAI/方舟/兼容网关走 `kit_generate.py`，详见 [runtime-portability.md](references/runtime-portability.md)。
-- 中文字体跨平台回退：macOS 苹方/冬青黑体，Linux Noto Sans CJK/文泉驿（CI 自动安装 fonts-noto-cjk）。
+- 中文字体跨平台回退（拼板/商卡的中文标题必需）：macOS 苹方/冬青黑体 → Linux Noto Sans CJK/文泉驿/Droid（CI 自动安装 `fonts-noto-cjk`）→ Windows 微软雅黑/黑体。**任何平台都可用 `CHARKIT_FONT=/path/to/font.ttc`（配合 `CHARKIT_FONT_INDEX`、`CHARKIT_FONT_BOLD`）显式覆盖**，适合精简镜像或没预装中文字体的容器；一个字体都没找到时，报错会直接给出对应平台的安装/覆盖命令。
 
 ## 测试
 

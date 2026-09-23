@@ -9,16 +9,19 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # 固定镜像而非 ubuntu-latest：ubuntu-latest 将于 2026-10-19 迁至 Ubuntu 26，
+    # 字体路径与预装环境都会变；固定版本可把"迁移把 CI 搞红"变成一次显式升级动作。
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.12", "3.14"]
     steps:
-      - uses: actions/checkout@v4
+      # v7/v7：v4、v5 目标是 Node 20，已被强制跑在 Node 24（弃用警告）；升级到 Node 24 原生的主版本。
+      - uses: actions/checkout@v7
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -27,6 +30,13 @@ jobs:
 
       - name: Install CJK fonts
         run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk fonts-wqy-zenhei
+
+      # 把"中文从哪里来"显式打进日志：拼板依赖系统 CJK 字体。
+      # 这一步把"字体缺失 / 回退命中了哪一个"从猜测变成可读事实（历史事故：run 35859680856）。
+      - name: Font self-check
+        run: |
+          PYTHONPATH=scripts python3 -c \
+            "from charkit.fonts import font_name, font_path; print('CJK font ->', font_name(), font_path())"
 
       - name: Unit tests
         run: |
