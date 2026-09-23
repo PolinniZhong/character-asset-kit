@@ -2,6 +2,23 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## 未发布 — CI 跨平台加固（字体回退链 / 固定 runner / action 升级）
+
+起因：v1.3.0 首发 CI（run 35859680856）在 ubuntu 三个 Python 版本全红，停在 `test_pipeline.py`
+第一个需要画字的用例——`charkit/fonts.py` 的候选字体表当时只有 macOS 路径，本地全绿掩盖了 Linux 不可用。
+
+- **`scripts/charkit/fonts.py`**：
+  - 新增 **Windows** 候选（微软雅黑 `msyh.ttc`/`msyhbd.ttc`、黑体 `simhei.ttf`）；
+  - 新增**显式覆盖开关** `CHARKIT_FONT` / `CHARKIT_FONT_INDEX` / `CHARKIT_FONT_BOLD` / `CHARKIT_FONT_BOLD_INDEX`，
+    适用于精简镜像、非主流发行版、无预装中文字体的容器（非法 index 静默退回默认值，不抛异常）；
+  - 找不到字体时的 `RuntimeError` 改为**可操作文案**（按平台给安装/覆盖命令），并写清历史事故出处。
+- **`.github/workflows/ci.yml`**：
+  - `runs-on` 由 `ubuntu-latest` **固定为 `ubuntu-24.04`**（`ubuntu-latest` 将于 2026-10-19 迁 Ubuntu 26）；
+  - `actions/checkout@v4 → @v7`、`actions/setup-python@v5 → @v7`（v4/v5 目标 Node 20，已被强制跑 Node 24）；
+  - 新增 **Font self-check** 步骤：把"命中了哪个中文字体"显式打进 CI 日志。
+- 文档：README 双语「环境」节补 Windows 与 `CHARKIT_FONT` 覆盖说明；本文件新增本节。
+- 未做（待定）：Python 3.10 将于 2026-10 生命周期结束，矩阵是否改为 3.11/3.12/3.14 待定。
+
 ## v1.3.0（2026-09-23）— 双 profile：新增真人写实线 ＋ 企业化打地基（Eval/元数据/CI/密钥扫描）
 
 本版做两件事：①把"真人写实"从一个项目副本沉淀为**内置第二 profile**（一个 Skill 多 profile、不拆分）；②补上企业级最关键的地基——可评测、有元数据、提交自动测试。
