@@ -30,7 +30,7 @@
 
 ![G0–G14 gate map: one sign-off per gate; the registry must show 0 ERROR before sealing](docs/images/pipeline-gates.png)
 
-The methodology is not guesswork: three groups of 60 controlled reproduction runs (210 images total) produced **zero identity drift across 180 identity-dimension images**. All three pre-registered hypotheses H1/H2/H3 were unsupported — the findings are reported as-is, not polished. The success rates are specific to Seedream 5.0 Pro; after switching models you must run the minimal re-validation set rather than reusing these numbers.
+The methodology is not guesswork: **210 controlled reproduction runs = 180 main-experiment images (three groups G1/G2/G3, 60 each) + 30 P1 prompt-improvement runs**; identity is counted on the **180 main images, with zero drift** (a separate 15-image G1 pilot is excluded; 225 images were generated in total). All three pre-registered hypotheses H1/H2/H3 were unsupported — the findings are reported as-is, not polished. The success rates are specific to Seedream 5.0 Pro; after switching models you must run the minimal re-validation set rather than reusing these numbers.
 
 ![Results of the 210-image controlled study: G1 85.0% / G2 83.3% / G3 75.0% usable, with zero identity drift](docs/images/evidence-210.png)
 
