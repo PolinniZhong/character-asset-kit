@@ -31,8 +31,8 @@
     {"id": "S09", "expect": "trigger", "profile": "any", "text": "做角色多视图和动作库"},
     {"id": "S10", "expect": "trigger", "profile": "blindbox3d", "text": "建一个 3D 卡通角色的完整资产"},
     {"id": "S11", "expect": "trigger", "profile": "realhuman", "text": "帮我做一个真人写实风格的角色"},
-    {"id": "S12", "expect": "trigger", "profile": "realhuman", "text": "我要一个都市韩剧男主，真人照片那种质感"},
-    {"id": "S13", "expect": "trigger", "profile": "realhuman", "text": "做个写实数字人，皮肤要真实、不要塑料感"},
+    {"id": "S12", "expect": "trigger", "profile": "realhuman", "text": "我要做一个都市韩剧男主的真人角色，要真人照片那种质感"},
+    {"id": "S13", "expect": "trigger", "profile": "realhuman", "text": "我要做一个写实数字人角色，皮肤要真实、不要塑料感，做成可复用的真人写实资产"},
     {"id": "S14", "expect": "trigger", "profile": "realhuman", "text": "用真人写实 profile 生产一个都市男角色"},
 
     {"id": "N01", "expect": "no_trigger", "profile": "none", "text": "帮我写一篇公众号文章"},
@@ -44,6 +44,8 @@
     {"id": "N07", "expect": "no_trigger", "profile": "none", "text": "画个风景插画"},
     {"id": "N08", "expect": "no_trigger", "profile": "none", "text": "帮我设计 logo"},
     {"id": "N09", "expect": "no_trigger", "profile": "none", "text": "给这张图换个背景"},
-    {"id": "N10", "expect": "no_trigger", "profile": "none", "text": "做个表情包"}
+    {"id": "N10", "expect": "no_trigger", "profile": "none", "text": "做个表情包"},
+    {"id": "N11", "expect": "no_trigger", "profile": "none", "text": "我要一个都市韩剧男主，真人照片那种质感"},
+    {"id": "N12", "expect": "no_trigger", "profile": "none", "text": "做个写实数字人，皮肤要真实、不要塑料感"}
   ]
 }

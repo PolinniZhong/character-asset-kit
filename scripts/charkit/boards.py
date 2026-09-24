@@ -138,7 +138,21 @@ def build_pose(char_dir, mf, guides=False):
 # ============ 5. 道具与手持 ============
 def build_prop(char_dir, mf, guides=False):
     cfg = mf["boards"]["prop"]
-    W, H, M = 3600, 2580, 80
+    W, M = 3600, 80
+    root = _root(char_dir)
+    # 动态高度：solo 一行；held 按每行 held_cols 个自动多行（向后兼容 ≤held_cols 个旧包）
+    n_solo = len(cfg["solo"])
+    held_cols = 3
+    held_rows = [cfg["held"][i:i + held_cols] for i in range(0, len(cfg["held"]), held_cols)]
+    held_h = 1120
+    held_row_gap = 150
+    held_section_y = 1260
+    held_baselines = []
+    y = held_section_y + held_h + 40
+    for _r in range(len(held_rows)):
+        held_baselines.append(y)
+        y += held_h + held_row_gap
+    H = held_baselines[-1] + 170
     b = Board(W, H, "角色道具与手持关系设定",
               meta=f"{cfg['version']} · {cfg.get('meta', '')}".strip(" ·"))
     # 基类标题字号偏小，本板重画标题
@@ -148,28 +162,28 @@ def build_prop(char_dir, mf, guides=False):
     b.d.text((M, 46), "角色道具与手持关系设定", font=f(46, True), fill=INK)
     mt = f"{cfg['version']} · {cfg.get('meta', '')}".strip(" ·")
     b.d.text((W - M - b.d.textlength(mt, font=f(26)), 62), mt, font=f(26), fill=SUB)
-    root = _root(char_dir)
 
     def section(y, text):
         b.d.rectangle([M, y + 8, M + 14, y + 22], fill=BLUE)
         b.d.text((M + 30, y), text, font=f(28, True), fill=INK)
 
     section(150, "单体独立图")
-    n_solo = len(cfg["solo"])
     solo_cx = [round(M + (W - 2 * M) * (i + 0.5) / n_solo) for i in range(n_solo)]
     for i, it in enumerate(cfg["solo"]):
         im = b.cell_white(it["white"], 820, 880, root=root)
         b.paste_bottom(im, solo_cx[i], 1110)
         b.caption(solo_cx[i], 1130, it["label"], size=34, fill=(51, 65, 85))
 
-    section(1260, "手持关系")
+    section(held_section_y, "手持关系")
     held_cx = [660, 1800, 2940]
-    for i, it in enumerate(cfg["held"]):
-        im = b.cell_h(it["white"], 1120, root=root)
-        b.paste_bottom(im, held_cx[i], 2410)
-        b.caption(held_cx[i], 2424, it["label"], size=34, fill=(51, 65, 85))
+    for r, row in enumerate(held_rows):
+        baseline = held_baselines[r]
+        for c, it in enumerate(row):
+            im = b.cell_h(it["white"], held_h, root=root)
+            b.paste_bottom(im, held_cx[c], baseline)
+            b.caption(held_cx[c], baseline + 14, it["label"], size=34, fill=(51, 65, 85))
 
-    b.hex_strip(mf["palette"], 2522, pill_h=40, label_size=22, pill_size=20)
+    b.hex_strip(mf["palette"], H - 58, pill_h=40, label_size=22, pill_size=20)
     out = os.path.join(root, cfg["out_clean"])
     return b.save(out)
 

@@ -69,7 +69,7 @@ EXT_GATES = ["G10", "G11", "G12", "G13", "G14"]
 ALL_GATES = BASE_GATES + EXT_GATES
 
 # 结构规范 v0.3 的 kit_init_character TREE 已登记的二级子目录（用于 W3）
-KNOWN_SUBDIRS = {"单图", "拼板", "单体独立图", "手持关系", "配饰变体", "微表情矩阵", "俯仰视线", "场景母版", "风格母版"}
+KNOWN_SUBDIRS = {"单图", "拼板", "单体独立图", "手持关系", "配饰变体", "微表情矩阵", "俯仰视线", "场景母版", "风格母版", "比例对照"}
 
 REQ_PKG_FIELDS = ("registry_version", "library_type", "asset_object_type",
                   "code", "character_asset_key", "spec_card_current")
@@ -174,6 +174,8 @@ def manifest_outputs(mf, sections=None):
 
     def walk(x):
         if isinstance(x, dict):
+            if x.get("enabled") is False:
+                return  # 显式裁剪（如真人线 G10 微表情矩阵），不收集其产物
             for k, v in x.items():
                 if k in ("out", "out_clean", "out_review") and isinstance(v, str):
                     outs.append(v)
@@ -328,8 +330,8 @@ def scan_unknown_dirs(char_dir):
         parts = relroot.split("/")
         if len(parts) >= 2:
             second = parts[1]
-            if re.match(r"^S\d+[-_]", second):
-                # 风格变体插槽层（如 S2-黏土），其下再挂 风格母版/单图/拼板
+            if re.match(r"^[SR]\d+[-_]", second):
+                # 风格/造型变体插槽层（3D 如 S2-黏土，真人如 R3-休闲日常），其下再挂 风格母版/单图/拼板
                 if len(parts) >= 3 and parts[2] not in KNOWN_SUBDIRS and parts[2] != BOARD_DIR:
                     out.add(f"{parts[0]}/{second}/{parts[2]}")
             elif second not in KNOWN_SUBDIRS and second != BOARD_DIR:
@@ -371,10 +373,26 @@ def scan_spec_cards(char_dir):
 
 
 def g14_dataset_ok(char_dir, code):
-    """G14：S1 训练数据集最小要求（完整校验由 kit_trainset.py --check 负责）。"""
+    """G14：训练数据集最小要求（完整校验由 kit_trainset.py --check 负责）。"""
     import glob
     base = os.path.join(char_dir, "11_训练素材", "datasets")
-    slots = glob.glob(os.path.join(base, "S1-*")) if os.path.isdir(base) else []
+    if not os.path.isdir(base):
+        return False
+    # 插槽名按**本包 config 声明**解析，不再硬编码 `S1-*`：
+    # 盲盒 3D profile 用 `S1-盲盒3D_v1.0`，真人写实 profile 用 `R1-真人写实_v1.0`（真人线前缀是 R 不是 S）。
+    # ⚠️ 原实现硬编码 glob("S1-*")，真人线（R slot）恒判 False ⇒ 误报 E5「G14 标 done 但最小产物不满足」。
+    _cfg_p = os.path.join(char_dir, "11_训练素材", "trainset.config.json")
+    _slot = None
+    if os.path.exists(_cfg_p):
+        try:
+            _slot = (json.load(open(_cfg_p, encoding="utf-8")) or {}).get("dataset_slot")
+        except Exception:
+            _slot = None
+    decl = os.path.join(base, _slot) if _slot else None
+    if decl and os.path.isdir(decl):
+        slots = [decl]
+    else:
+        slots = sorted(glob.glob(os.path.join(base, "[SR][0-9]-*")))
     if not slots:
         return False
     for d in slots:

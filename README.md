@@ -20,10 +20,10 @@ English: [README.en.md](README.en.md)
 
 ![崩一格只重跑一格：逐张生成＋确定性拼板，废稿不向其他格扩散](docs/images/compare-one-shot.jpg)
 
-## 现状（最新 v1.3.0，2026-09-23）
+## 现状（最新 v1.3.1，2026-09-24）
 
 - **内置两套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）与 **`gates-realhuman-v1`（真人写实摄影）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」（毛孔/极淡青胡茬/自然哑光皮脂＋85mm 胶片光学、零磨皮，避免塑料/打蜡感）。
-- 方法论在两个完整 3D 角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)）；真人写实 profile 也已在一个完整真人角色（G0–G14）上实证。
+- 方法论在两个完整 3D 角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)）；真人写实 profile 也已在两个完整真人角色（KR-01 韩东、KR-02 姜书媛，G0–G14）上实证。
 - 画风、门集合、插槽、画幅全部 **profile 化**，**不绑定任何角色或画风**；新增风格只需选/复制 profile。
 - **评测与工程化**：[`evals/`](evals/) 提供 L1 触发测试、L2 质量 A/B（裸模型 vs Skill）与五维 rubric；`skill.yaml` 为结构化元数据；GitHub Actions CI（Python 3.10/3.12/3.14）自动跑单测与密钥扫描。
 - [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) 提供一套真实产线输出的**脱敏成品板**（10 张，G2–G12），可直接查看各板型长相。

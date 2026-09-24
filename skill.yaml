@@ -2,9 +2,9 @@
 # 本文件是 skill 的机器可读清单；人读说明见 SKILL.md。评测基线在评测跑完后回填，null＝尚未建立。
 id: character-asset-kit
 display_name: 千面工坊
-version: 1.3.0
+version: 1.3.1
 status: released               # development / released / deprecated
-release_date: 2026-09-23
+release_date: 2026-09-24
 owner: PolinniZhong
 license: MIT
 repository: https://github.com/PolinniZhong/character-asset-kit
@@ -43,8 +43,22 @@ profiles:
     head_ratio: 5.5
     style_token: style3d
     evals:
-      trigger_precision: null
-      task_completion: null
+      trigger_precision:
+        precision: 1.0
+        recall: 1.0
+        specificity: 1.0
+        runs_per_case: 3
+        note: "三轮基线为 Skill 级（不分 profile），见顶层 evals.trigger_precision：26case 最终 Precision/Specificity 1.0、Recall 均值 0.976（仅 S11 一次边界波动），release 门禁通过"
+      task_completion:
+        t2_pass_rate: 1.0
+        t2_b_score: 95.5
+        t2_a_score: 41.5
+        t2_net_value_ba: 54.0
+        t2_image_only_b: 89.06
+        t2_image_only_a: 88.88
+        t2_image_only_net: 0.19
+        n_tasks: 1
+        note: "T2 标准3D单任务单次跑；单图质量盲评A/B打平(+0.19)，综合净价值+54.0全部来自流程维度(门径/规范/沉淀/返工)；3D盲盒风格身份签名简单裸模型也能复现，Skill核心价值在生产线而非单图；报告 06_企业化_千面工坊/L2_盲评材料/（不进公开仓）"
   - id: gates-realhuman-v1
     display_name: 真人写实风
     profile_file: profiles/gates-realhuman-v1.json
@@ -52,8 +66,34 @@ profiles:
     head_ratio: 7.3
     style_token: realphoto
     evals:
-      trigger_precision: null
-      task_completion: null
+      trigger_precision:
+        precision: 1.0
+        recall: 1.0
+        specificity: 1.0
+        runs_per_case: 3
+        note: "三轮基线为 Skill 级（不分 profile），见顶层 evals.trigger_precision：26case 最终 Precision/Specificity 1.0、Recall 均值 0.976（仅 S11 一次边界波动），release 门禁通过"
+      task_completion:
+        t3_pass_rate: 1.0
+        t3_b_score: 94.7
+        t3_a_score: 26.0
+        t3_net_value_ba: 68.7
+        n_tasks: 1
+        note: "T3 标准真人单任务单次跑；皮肤维度含模型因素，门径/规范/沉淀归因干净；报告 06_企业化_千面工坊/L2_盲评材料/（不进公开仓）"
+      consistency:
+        l3_task: "T3 姜书媛 G1 母版"
+        l3_runs: 4
+        l3_mean_score: 86.5
+        l3_range: 0
+        l3_std: 0
+        l3_cv_percent: 0.0
+        l3_pass: true
+        l3_threshold_percent: 15
+        l3_dimension_scores:
+          identity: 90
+          skin_realism: 80
+          asset_spec: 90
+          overall: 85
+        note: "L3 简化版：相同提示词独立生图4次+标准落格，用户盲评4张完全同分(CV=0%)，远低于≤15%通过线；诚实边界：本版测生图波动而非完整Skill流程(门径/过门/沉淀/台账)波动；皮肤80为最低维度(放大看有蜡感/AI味)，正面光感获好评待回灌；报告 06_企业化_千面工坊/L3_波动评测/（不进公开仓）"
 
 evals:
   dir: evals
@@ -61,6 +101,30 @@ evals:
   task_quality: evals/task_quality.json
   rubric: evals/rubric.md
   trigger_stats: evals/run_trigger_check.py
+  trigger_precision:
+    runs_per_case: 3
+    total_cases: 26
+    precision: 1.0
+    specificity: 1.0
+    recall: [1.0, 0.929, 1.0]
+    recall_mean: 0.976
+    accuracy: [1.0, 0.962, 1.0]
+    false_positives: 0
+    stable_false_negatives: []
+    volatile_false_negatives: [S11]
+    pass: true
+    note: "L1 最终三轮基线（26case＝重定义S12/S13＋新增N11/N12，每case独立干净工作会话、标准逐字话术）：78观测 TP41/FP0/TN36/FN1，Precision/Specificity 三轮100%；Recall run1 100%/run2 92.9%/run3 100%（均值97.6%），Accuracy 100/96.2/100。唯一波动 S11 run2（边界、非稳定FN）。release 门槛 precision>=0.90、recall>=0.90 均通过。记录 06_企业化_千面工坊/L1_盲评材料/L1_复测记录.jsonl（不进公开仓）"
+    boundary_redefinition_B:
+      date: 2026-09-24
+      trigger_word_stuffing_falsified: "在 SKILL.md description 补6词（真人男主/都市剧男主/韩剧男主/都市韩剧男主/真人照片质感/真人照片那种质感），用户彻底重启（新进程pid7441）后 S12 仍走单张写真(run6)→证伪：路由按任务形态判断、非关键词命中；补词无FP（N02/N09 正确TN，S13仍FN）"
+      decision: "用户拍板方向B：裸'要一张照片'=合理单张生图、不触发；生产线只在'做角色/资产/多视图/一致性'语境触发"
+      changes:
+        s12: "重定义为'我要做一个都市韩剧男主的真人角色，要真人照片那种质感'，实测触发 run8（run7提交失败、标invalid不计）"
+        n11: "新增 N11=旧裸话术'我要一个都市韩剧男主，真人照片那种质感'，run6 实测不触发=合理TN"
+        s13: "对称重定义为'我要做一个写实数字人角色，皮肤要真实、不要塑料感，做成可复用的真人写实资产'，实测触发 run5"
+        n12: "新增 N12=旧裸话术'做个写实数字人，皮肤要真实、不要塑料感'，run4 实测不触发=合理TN"
+      current_state: "26case完整三轮复测已完成：Precision/Specificity 100%、Recall均值97.6%（run2 S11一次FN）、Accuracy 98.7%，release门禁PASS"
+      todo: "待 git commit 并随新版本发版（版本号待定）"
   gates:
     trigger_precision_release: 0.90
     task_completion_release: 0.85

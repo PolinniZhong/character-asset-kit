@@ -20,10 +20,10 @@
 
 ![A broken cell is re-generated alone: single-unit generation plus deterministic assembly keeps a failure from spreading to the board](docs/images/compare-one-shot.jpg)
 
-## Status (latest v1.3.0, 2026-09-23)
+## Status (latest v1.3.1, 2026-09-24)
 
 - **Two built-in style profiles**: `gates-blindbox3d-v1` (3D blind-box toy, default) and **`gates-realhuman-v1` (photorealistic photography)** — the gates and deterministic scripts are fully reused; switching style only switches the profile. The real-human line centers on a "real-skin methodology" (visible pores / very faint clean-shaven stubble / natural matte sebum + 85mm film optics, zero skin smoothing) to avoid a plastic/wax look.
-- The methodology was proven end-to-end on two complete 3D characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media, 17 derived deliverables, sealed 0 ERROR / 0 WARN — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md)). The real-human profile was also validated on a complete photorealistic character (G0–G14).
+- The methodology was proven end-to-end on two complete 3D characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media, 17 derived deliverables, sealed 0 ERROR / 0 WARN — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md)). The real-human profile was also validated on two complete photorealistic characters (KR-01 male / KR-02 female, G0–G14).
 - Style, gate set, slots, and canvases are all **profile-driven**, **not bound to any character or style**; adding a style only needs selecting/copying a profile.
 - **Evaluation & engineering**: [`evals/`](evals/) provides L1 trigger tests, L2 quality A/B (bare model vs Skill) and a five-dimension rubric; `skill.yaml` is structured metadata; GitHub Actions CI (Python 3.10/3.12/3.14) runs unit tests and secret scanning.
 - [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) ships **desensitized real deliverable boards** (10 images, G2–G12).
