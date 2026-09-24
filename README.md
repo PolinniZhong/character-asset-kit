@@ -6,6 +6,8 @@
 
 English: [README.en.md](README.en.md)
 
+[![skills.sh](https://www.skills.sh/b/PolinniZhong/character-asset-kit)](https://www.skills.sh/PolinniZhong/character-asset-kit)
+
 ## 一分钟装上
 
 ```bash

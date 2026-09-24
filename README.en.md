@@ -6,6 +6,8 @@
 >
 > 中文：[README.md](README.md)（中文名：千面工坊 · 角色资产生产线）
 
+[![skills.sh](https://www.skills.sh/b/PolinniZhong/character-asset-kit)](https://www.skills.sh/PolinniZhong/character-asset-kit)
+
 ## Install in a minute
 
 ```bash
