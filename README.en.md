@@ -6,6 +6,14 @@
 >
 > 中文：[README.md](README.md)（中文名：千面工坊 · 角色资产生产线）
 
+## Install in a minute
+
+```bash
+npx skills add PolinniZhong/character-asset-kit
+```
+
+Then tell your agent “use character-asset-kit to create a new character.” One character becomes a full set of **reusable, identity-stable** assets: a white-background master plus a five-view sheet, expressions, poses, prop hand-held relations, camera & gaze angles, scene packs, outfit/style variants, a character sheet, and an auditable ledger; it also auto-prepares a training dataset when you need one.
+
 ![One master produces a full character asset matrix: multi-view, expressions, details, poses, props, micro-expressions, camera & gaze, scenes, and the character sheet](docs/images/hero-asset-matrix.jpg)
 
 ## What problem it solves

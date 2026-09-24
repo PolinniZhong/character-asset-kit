@@ -6,6 +6,14 @@
 
 English: [README.en.md](README.en.md)
 
+## 一分钟装上
+
+```bash
+npx skills add PolinniZhong/character-asset-kit
+```
+
+装好后对 Agent 说一句“用千面工坊建一个新角色”，一个角色会被做成整套**可复用、不崩脸**的资产：白底母版与五视图、表情板、动作姿态板、道具手持关系、机位视线、场景包、造型/风格变体、角色设定板与可审计台账；需要训练时还会自动备料数据集。
+
 ![一个母版产出的角色资产矩阵：五视图、表情、细节、动作、道具、微表情、机位视线、场景与设定板](docs/images/hero-asset-matrix.jpg)
 
 ## 它解决什么问题
