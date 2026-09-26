@@ -1,6 +1,6 @@
 ---
 name: character-asset-kit
-description: 千面工坊·角色资产生产线（character-asset-kit）。当用户要用千面工坊/角色生产线建新角色、做角色资产或角色库，或提到 character sheet、角色设定图板、多视图/三视图、表情板、动作库、角色道具/商卡、角色一致性资产、按门径生产角色，以及真人写实角色、真人男主、都市/韩剧男主、真人照片质感时使用。把新角色按 G0–G14 门径（立项到封存：白底母版、多视图、表情、细节、胸像、动作、道具、拼板商卡，含微表情/机位视线/场景/风格变体/训练素材）做成可复用、可对账、可训练备料的 AIGC 角色资产库。内置 3D 卡通盲盒风与真人写实摄影风两套 profile；确定性脚本（Pillow＋Vision 抠图）负责落格、拼板、台账与训练集导出，生图由运行时调图像模型完成（默认豆包 seedream_5.0_pro，兼容多家网关）。不用于写文章配图，不承诺库内训练 LoRA。
+description: 千面工坊·角色资产生产线（character-asset-kit）。当用户要用千面工坊/角色生产线建新角色、做角色资产或角色库，或提到 character sheet、角色设定图板、多视图/三视图、表情板、动作库、角色道具/商卡、角色一致性资产、按门径生产角色，以及真人写实角色、真人男主、都市/韩剧男主、真人照片质感时使用。把新角色按 G0–G14 门径（立项到封存：白底母版、多视图、表情、细节、胸像、动作、道具、拼板商卡，含微表情/机位视线/场景/风格变体/训练素材）做成可复用、可对账、可训练备料的 AIGC 角色资产库。内置 3D 卡通盲盒风、真人写实摄影风与中国古风真人风三套 profile；确定性脚本（Pillow＋Vision 抠图）负责落格、拼板、台账与训练集导出，生图由运行时调图像模型完成（默认豆包 seedream_5.0_pro，兼容多家网关）。不用于写文章配图，不承诺库内训练 LoRA。
 license: MIT
 ---
 
@@ -14,6 +14,7 @@ license: MIT
 - **v1.2**：生图运行时层解耦——默认仍走豆包 `seedream_5.0_pro`，新增 `kit_generate.py`（纯标准库）支持 OpenRouter 统一网关 / Google Gemini / OpenAI gpt-image / 火山方舟 / 任意兼容网关，含模型解析优先级、参考图上限预检、`--dry-run`、限流重试、非 PNG 归一；新增 `references/runtime-portability.md`（提供商矩阵与最小再验证）。
 - **v1.2.1（方舟真机验证修复）**：持密钥打通 `--provider ark` 后修掉四条**静态检查抓不到**的缺陷——图生图端点（方舟无 `/images/edits`，改走 `/images/generations` + JSON `image`）、**零水印**（方舟不传 `watermark` 默认 `true`，现始终显式 `false`）、错误分类（`BrokenPipeError` 不再被写成"网络不可达"）、密钥候选（`key_env` 支持候选表）。
 - **v1.2.2（参考图配置：新增一个维度）**：`prompt-rewrite-rules.md` **新增 §7**——**构图锚必须与目标构图同景别、且一次只给一个**；混景别双锚（如全身母版＋胸像锚）时模型**两张都不跟、把主体撑满整幅**；成品资产不能当构图锚。坏例 **BC-34**。
+- **v1.4（古风 profile ＋ 门序对调）**：新增**第三 profile** `profiles/gates-realhuman-gufeng-v1.json`（中国古风真人：低饱和淡雅色调、朦胧柔光、丰富发型三级锚定）＋ `references/profile-gufeng.md`；**G3/G4 门序对调**（细节特写提前于表情）；背景投影三层规范；README 附 4 角色商卡成品展示。古风男女 KR-03温以宁/KR-04候书实证，43 单测全绿。
 - **v1.3（双 profile）**：新增**真人写实第二 profile** `profiles/gates-realhuman-v1.json`（7.3 头身、真实皮肤方法论、现实都市 world、G13 改为造型变体、训练集 min_images=30）＋ `references/profile-realhuman.md`；脚本向后兼容（dataset_slot／真人手持命名／可配 min_images）。**一个 Skill 多 profile、不拆分**；真人线目前仅豆包 seedream_5.0_pro 完成真机验证。
 - **v1.3.1（真人线修复＋L1 评测闭环）**：修真人 profile 端到端问题——G14 训练集 slot 按 config 解析（原硬编码 S slot 误报 E5）、道具板手持动态多行、变体插槽支持 R 前缀、裁剪门跳过；L1 触发边界按**任务形态**重定义（S12/S13 带角色语境触发、新增 N11/N12 裸话术合理不触发；堆词证伪），26 case 三轮 Precision/Specificity 100%、Recall 均值 97.6%，release 门禁通过；皮肤 v2.1 失败、胸像正面柔光、右肩留白回灌。43 单测全绿。
 - v1.1：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。
@@ -60,8 +61,8 @@ license: MIT
 | G0 立项 | 规格卡＋资产清单＋目录树 | `kit_init_character.py` | gates-g0-g9.md §G0 |
 | G1 母版 | 白底母版＋透明版 | `kit_standard_cell.py`、subjectmask | gates-g0-g9.md §G1 |
 | G2 多视图 | 五视图单图＋拼板（含验收版） | standard_cell、`kit_build_board.py --type multiview` | gates-g0-g9.md §G2 |
-| G4 表情 | 6 基础表情（头肩）＋板 | standard_cell `--bust`、build_board expression | gates-g0-g9.md §G3 |
-| G3 细节特写 | 6 签名细节方格＋板 | standard_cell `--square`、build_board detail | gates-g0-g9.md §G4 |
+| G3 细节特写 | 6 签名细节方格＋板 | standard_cell `--square`、build_board detail | gates-g0-g9.md §G3 |
+| G4 表情 | 6 基础表情（头肩）＋板 | standard_cell `--bust`、build_board expression | gates-g0-g9.md §G4 |
 | G5 营销胸像 | 前 3/4 胸像 | standard_cell `--bust` | gates-g0-g9.md §G5 |
 | G6 动作姿态 | A 手势/B 身势/C 职业动作＋板 | standard_cell（坐姿 `--scale-factor 0.58`）、build_board pose | gates-g0-g9.md §G6 |
 | G7 道具 | 单体图→比例对照→手持关系＋板 | standard_cell `--square`、build_board prop | gates-g0-g9.md §G7 |

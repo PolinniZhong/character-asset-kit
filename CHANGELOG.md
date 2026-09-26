@@ -2,6 +2,44 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## v1.4.0（2026-09-26）— 古风真人 profile ＋ G3/G4 门序对调 ＋ 角色成品展示
+
+**新增第三套风格 profile：`gates-realhuman-gufeng-v1`（中国古风真人）**
+- 在两个完整古风真人角色上实证：KR-03 温以宁（女，书肆主人，G0–G14）、KR-04 候书（男，江南文人，G0–G12）
+- 古风核心方法论：
+  - **低饱和淡雅色调**（约70%饱和度）、朦胧柔光，避免高饱和艳色
+  - **丰富发型三级锚定**：G2 多视图（正面+背面）→ G3 发丝格（微距钉死发簪布局）→ G4 表情（双锚写死发型细项）
+  - 男性古风发型简单（束发戴冠）可降级为母版单锚
+- 新增 `references/profile-gufeng.md`（古风增量文档）
+
+**G3/G4 门序对调（依赖链修正）**
+- 原 G3 表情 / G4 细节特写 → 现 G3 细节特写 / G4 基础表情
+- 根因：丰富发型（古风发髻+发饰）的发型细节必须在表情扩展前被特写钉死，否则错误从 G2 传导到表情
+- 覆盖：3 个 profile JSON、gates-g0-g9.md、10+ 文档引用、init 脚本模板、kit_trainset 扫描路径、资产清单模板、测试文件
+
+**背景与投影三层规范**
+- 新增 `references/asset-background-shadow-spec.md` 文字权威
+- 新增 `docs/asset-background-shadow-spec.html` 可视化版
+- 三层模型：原料层 Master（真透明零投影）/ 预览层 Catalog（纯白+极淡接触阴影）/ 成品层 Scene（完整环境+完整投影）
+
+**角色成品展示（README）**
+- 4 个真实角色商卡附入 `docs/images/`：
+  - 真人写实：韩东（男）、姜书媛（女）
+  - 真人古风：温以宁（女）、候书（男）
+- 每张商卡含主视觉+五视图+表情+细节+道具+动作，一图看清整套资产
+
+**工程修复**
+- 修复 `build_card` detail/prop items 缺 `card_label` 的 KeyError（expression 有 .get 默认值但 detail/prop 没有）
+- bad-cases 新增 BC-34~BC-42：发型漂移/命名不一致/三级锚定/prop板型误用items/gaze front_ref过期/G14空目录/G12缺母版拼板/资产ID规则搞反/build_prop review bug
+- 43 单测全绿
+
+**已知限制**
+- checker G12 要求竖/横各≥5（多场景口径），单场景门标 pending（产物已实际完成）
+- 微表情放 `09_风格变体/微表情/` 会被 scaffold 误判为 G13 style，需手动修正 unit_type
+- 白色服装角色禁止色键抠图（会把衣服一起抠掉），统一 --already-cutout
+
+---
+
 ## v1.3.1（2026-09-24）— CI 跨平台加固 ＋ 真人写实线端到端修复 ＋ L1 触发评测三轮闭环
 
 起因：v1.3.0 首发 CI（run 35859680856）在 ubuntu 三个 Python 版本全红，停在 `test_pipeline.py`
