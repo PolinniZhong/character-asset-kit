@@ -103,26 +103,26 @@ class MicroExpressionTest(unittest.TestCase):
     def test_empty_level_families_skipped(self):
         # #008 回归：levels 为空的可选族不得渲染空白行
         with tempfile.TemporaryDirectory() as td:
-            cell_dir = os.path.join(td, "03_表情", "单图")
+            cell_dir = os.path.join(td, "04_表情", "单图")
             os.makedirs(cell_dir)
             for name in ("neutral.png", "e1l1.png"):
                 im = Image.new("RGB", (1773, 2364), (238, 238, 238))
                 ImageDraw.Draw(im).ellipse([500, 300, 1273, 1900], fill=(180, 150, 120))
                 im.save(os.path.join(cell_dir, name))
-            out_clean = "03_表情/拼板/micro_clean.png"
-            os.makedirs(os.path.join(td, "03_表情", "拼板"))
+            out_clean = "04_表情/拼板/micro_clean.png"
+            os.makedirs(os.path.join(td, "04_表情", "拼板"))
             mf = {
                 "palette": [],
                 "boards": {
                     "micro_expression": {
                         "version": "v1.0",
                         "meta": "",
-                        "neutral_ref": "03_表情/单图/neutral.png",
+                        "neutral_ref": "04_表情/单图/neutral.png",
                         "out_clean": out_clean,
-                        "out_review": "03_表情/拼板/micro_review.png",
+                        "out_review": "04_表情/拼板/micro_review.png",
                         "families": [
                             {"label": "喜悦", "levels": [
-                                {"label": "喜悦 L1", "white": "03_表情/单图/e1l1.png"}]},
+                                {"label": "喜悦 L1", "white": "04_表情/单图/e1l1.png"}]},
                             {"label": "难过", "levels": [], "optional": True},
                             {"label": "生气", "levels": [], "optional": True},
                         ],

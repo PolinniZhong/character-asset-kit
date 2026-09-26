@@ -92,21 +92,21 @@
         1773,
         1440
       ],
-      "out_clean": "03_表情/拼板/{CODE}_表情板_v1.0_干净版.png",
-      "out_review": "03_表情/拼板/{CODE}_表情板_v1.0_验收版.png",
+      "out_clean": "04_表情/拼板/{CODE}_表情板_v1.0_干净版.png",
+      "out_review": "04_表情/拼板/{CODE}_表情板_v1.0_验收版.png",
       "items": [
         {
           "label": "0中性",
           "card_label": "0 中性",
-          "white": "03_表情/单图/{CODE}_表情-0中性_v1.0_白.png"
+          "white": "04_表情/单图/{CODE}_表情-0中性_v1.0_白.png"
         }
       ]
     },
     "detail": {
       "version": "v1.0",
       "meta": "6格局部特写",
-      "out_clean": "04_细节特写/拼板/{CODE}_细节板_v1.0_干净版.png",
-      "out_review": "04_细节特写/拼板/{CODE}_细节板_v1.0_验收版.png",
+      "out_clean": "03_细节特写/拼板/{CODE}_细节板_v1.0_干净版.png",
+      "out_review": "03_细节特写/拼板/{CODE}_细节板_v1.0_验收版.png",
       "items": []
     },
     "pose": {
@@ -126,9 +126,9 @@
     "micro_expression": {
       "version": "v1.0",
       "meta": "4族×3强度+中性（封存后扩展 G10）",
-      "out_clean": "03_表情/微表情矩阵/拼板/{CODE}_微表情矩阵_v1.0_干净版.png",
-      "out_review": "03_表情/微表情矩阵/拼板/{CODE}_微表情矩阵_v1.0_验收版.png",
-      "neutral_ref": "03_表情/单图/{CODE}_表情-0中性_v1.0_白.png",
+      "out_clean": "04_表情/微表情矩阵/拼板/{CODE}_微表情矩阵_v1.0_干净版.png",
+      "out_review": "04_表情/微表情矩阵/拼板/{CODE}_微表情矩阵_v1.0_验收版.png",
+      "neutral_ref": "04_表情/单图/{CODE}_表情-0中性_v1.0_白.png",
       "families": [
         {
           "key": "E1",
@@ -137,15 +137,15 @@
           "levels": [
             {
               "label": "L1 浅笑",
-              "white": "03_表情/微表情矩阵/单图/{CODE}_微表情-E1L1_白.png"
+              "white": "04_表情/微表情矩阵/单图/{CODE}_微表情-E1L1_白.png"
             },
             {
               "label": "L2 露齿笑",
-              "white": "03_表情/微表情矩阵/单图/{CODE}_微表情-E1L2_白.png"
+              "white": "04_表情/微表情矩阵/单图/{CODE}_微表情-E1L2_白.png"
             },
             {
               "label": "L3 开怀大笑",
-              "white": "03_表情/微表情矩阵/单图/{CODE}_微表情-E1L3_白.png"
+              "white": "04_表情/微表情矩阵/单图/{CODE}_微表情-E1L3_白.png"
             }
           ]
         },
@@ -187,7 +187,7 @@
       "meta": "俯仰2 + 视线4（封存后扩展 G11）",
       "out_clean": "02_多视图/俯仰视线/拼板/{CODE}_机位视线板_v1.0_干净版.png",
       "out_review": "02_多视图/俯仰视线/拼板/{CODE}_机位视线板_v1.0_验收版.png",
-      "front_ref": "03_表情/单图/{CODE}_表情-0中性_v1.0_白.png",
+      "front_ref": "04_表情/单图/{CODE}_表情-0中性_v1.0_白.png",
       "camera": [
         {
           "label": "俯角15°",

@@ -44,7 +44,7 @@ class SmokeTest(unittest.TestCase):
         for k in ("multiview", "expression", "detail", "pose", "prop",
                   "micro_expression", "gaze", "character_sheet", "card"):
             self.assertIn(k, mf["boards"], f"模板缺 boards.{k}（#001 回归）")
-        for slot in ("01_母版", "02_多视图", "03_表情", "04_细节特写", "05_营销胸像",
+        for slot in ("01_母版", "02_多视图", "04_表情", "03_细节特写", "05_营销胸像",
                      "06_动作姿态", "07_道具", "08_提示词库", "12_场景包"):
             self.assertTrue(os.path.isdir(os.path.join(self.char, slot)), slot)
 

@@ -30,9 +30,23 @@ npx skills add PolinniZhong/character-asset-kit
 
 ![崩一格只重跑一格：逐张生成＋确定性拼板，废稿不向其他格扩散](docs/images/compare-one-shot.jpg)
 
+## 角色成品展示
+
+以下是用本 Skill 生产的真实角色商卡（一女一男，古风真人 profile）。每张商卡包含：主视觉胸像、标准站姿、全身五视图、基础表情、细节特写、道具手持、动作姿态——一张图看清整套资产长什么样。
+
+**温以宁（女，24岁，书肆主人）** — 藕紫偏粉齐腰襦裙，半披发高发髻，古风真人
+
+![温以宁角色商卡：主视觉+五视图+表情+细节+道具+动作](docs/images/showcase-yining.png)
+
+**候书（男，26岁，江南文人）** — 月白交领长衫墨青镶边，束发青玉冠，温以宁青梅竹马
+
+![候书角色商卡：主视觉+五视图+表情+细节+道具+动作](docs/images/showcase-houshu.png)
+
+> 商卡由 `kit_build_board.py --type card` 确定性拼板生成，标签在画面外不压像素；所有单图均经标准格落格与台账对账。
+
 ## 现状（最新 v1.3.1，2026-09-24）
 
-- **内置两套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）与 **`gates-realhuman-v1`（真人写实摄影）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」（毛孔/极淡青胡茬/自然哑光皮脂＋85mm 胶片光学、零磨皮，避免塑料/打蜡感）。
+- **内置三套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）、`gates-realhuman-v1`（真人写实摄影）、**`gates-realhuman-gufeng-v1`（中国古风真人）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」，古风线核心是「低饱和淡雅色调＋丰富发型三级锚定」。
 - 方法论在两个完整 3D 角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)）；真人写实 profile 也已在两个完整真人角色（KR-01 韩东、KR-02 姜书媛，G0–G14）上实证。
 - 画风、门集合、插槽、画幅全部 **profile 化**，**不绑定任何角色或画风**；新增风格只需选/复制 profile。
 - **评测与工程化**：[`evals/`](evals/) 提供 L1 触发测试、L2 质量 A/B（裸模型 vs Skill）与五维 rubric；`skill.yaml` 为结构化元数据；GitHub Actions CI（Python 3.10/3.12/3.14）自动跑单测与密钥扫描。

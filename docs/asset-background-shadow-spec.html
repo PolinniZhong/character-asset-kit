@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业级角色资产·背景与投影规范</title>
+</head>
+<body style="margin:0;">
+<div style="width:100%;box-sizing:border-box;padding:20px 16px 28px;font-family:-apple-system,'PingFang SC','Segoe UI',sans-serif;color:#23272f;background:#fbfbfc;max-width:980px;margin:0 auto;">
+
+  <div style="background:linear-gradient(135deg,#2b2630,#4a4152);color:#fff;border-radius:14px;padding:18px 20px;">
+    <div style="font-size:11px;letter-spacing:2px;opacity:.7;">企业级角色资产库 · 调研结论</div>
+    <div style="font-size:19px;font-weight:700;margin-top:6px;line-height:1.4;">一套角色，三层资产：库存单元不带场景，投影分层处理</div>
+    <div style="font-size:13px;opacity:.82;margin-top:8px;line-height:1.6;">“原料”要零环境信息以保证任意复用；“预览”给落地感；“场景”才是成品。背景与投影一旦烧进原料，就锁死了地面、光向与视角。</div>
+  </div>
+
+  <svg width="0" height="0" style="position:absolute;">
+    <defs>
+      <g id="figure" fill="#6b6172">
+        <circle cx="60" cy="20" r="9"/>
+        <circle cx="60" cy="36" r="15"/>
+        <ellipse cx="33" cy="88" rx="17" ry="35" transform="rotate(9 33 88)"/>
+        <ellipse cx="87" cy="88" rx="17" ry="35" transform="rotate(-9 87 88)"/>
+        <path d="M48,52 L72,52 L83,158 L37,158 Z"/>
+      </g>
+      <filter id="b3" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+      <filter id="b6" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
+      <linearGradient id="scene" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f3e9e2"/><stop offset="1" stop-color="#e7d6cc"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div style="margin-top:18px;display:flex;flex-direction:column;gap:14px;">
+
+    <div style="display:flex;gap:16px;align-items:stretch;background:#fff;border:1.5px solid #2b2630;border-radius:14px;padding:14px;flex-wrap:wrap;">
+      <div style="width:118px;flex:0 0 118px;height:172px;border-radius:10px;overflow:hidden;background-color:#f4f5f7;
+        background-image:linear-gradient(45deg,#d6d9e0 25%,transparent 25%),linear-gradient(-45deg,#d6d9e0 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#d6d9e0 75%),linear-gradient(-45deg,transparent 75%,#d6d9e0 75%);
+        background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;">
+        <svg viewBox="0 0 120 180" width="100%" height="100%"><use href="#figure"/></svg>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <span style="display:inline-block;background:#2b2630;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;">主资产 · MASTER</span>
+        <div style="font-size:16px;font-weight:700;margin:8px 0 4px;">① 原料层（合成母版）</div>
+        <div style="font-size:13px;line-height:1.9;color:#444b55;">
+          <b>背景：</b>真透明（Alpha 通道），无任何底色<br>
+          <b>投影：</b><span style="color:#b3402a;font-weight:700;">零投影</span>（连接触阴影都不留）<br>
+          <b>格式：</b>PNG-32 全身；关键角色另存 PSD 分层<br>
+          <b>用途：</b>一切合成的唯一源头——海报/视频/网页/PPT
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:stretch;background:#fff;border:1.5px solid #c9b8a0;border-radius:14px;padding:14px;flex-wrap:wrap;">
+      <div style="width:118px;flex:0 0 118px;height:172px;border-radius:10px;overflow:hidden;background:#ffffff;border:1px solid #eee;">
+        <svg viewBox="0 0 120 180" width="100%" height="100%">
+          <ellipse cx="60" cy="163" rx="27" ry="5" fill="#3a332c" opacity="0.10" filter="url(#b3)"/>
+          <use href="#figure"/>
+        </svg>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <span style="display:inline-block;background:#b08d57;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;">预览 · CATALOG</span>
+        <div style="font-size:16px;font-weight:700;margin:8px 0 4px;">② 目录层（浏览 / 轻应用）</div>
+        <div style="font-size:13px;line-height:1.9;color:#444b55;">
+          <b>背景：</b>绝对纯白 #FFFFFF，无渐变无空间<br>
+          <b>投影：</b>仅<b style="color:#2f7d4f;">极淡接触阴影</b>——足底一小团、不延伸、无偏移<br>
+          <b>格式：</b>PNG-24，统一画幅（1773×2364）<br>
+          <b>用途：</b>资产盘点、快速预览、免抠图轻应用
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:stretch;background:#fff;border:1.5px solid #d9c2c9;border-radius:14px;padding:14px;flex-wrap:wrap;">
+      <div style="width:118px;flex:0 0 118px;height:172px;border-radius:10px;overflow:hidden;">
+        <svg viewBox="0 0 120 180" width="100%" height="100%">
+          <rect width="120" height="180" fill="url(#scene)"/>
+          <path d="M0,120 Q30,104 58,118 T120,114 L120,180 L0,180 Z" fill="#d8c3b8" opacity="0.6"/>
+          <ellipse cx="70" cy="162" rx="42" ry="6" fill="#3a2c28" opacity="0.20" filter="url(#b6)"/>
+          <ellipse cx="60" cy="160" rx="24" ry="4" fill="#2a1f1c" opacity="0.22" filter="url(#b3)"/>
+          <use href="#figure"/>
+        </svg>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <span style="display:inline-block;background:#a86a86;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;">成品 · SCENE</span>
+        <div style="font-size:16px;font-weight:700;margin:8px 0 4px;">③ 场景层（消费端产物）</div>
+        <div style="font-size:13px;line-height:1.9;color:#444b55;">
+          <b>背景：</b>完整环境（古代场景 / 室内 / 山水）<br>
+          <b>投影：</b>完整——接触 + 环境光遮蔽 + 方向投射，与场景光一致<br>
+          <b>来源：</b>由①原料层 + 具体场景合成，<b>不是库存单元</b><br>
+          <b>对应：</b>千面工坊 G12 场景包、G10 商卡
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:22px;font-size:15px;font-weight:700;">投影怎么留：先分清三种“影”</div>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:180px;background:#eef7f1;border:1px solid #bfe3cd;border-radius:12px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:#2f7d4f;">✅ 接触阴影 Contact</div>
+      <div style="font-size:12px;line-height:1.6;color:#444;margin-top:6px;">物体接触地面处一小团柔和暗部，只暗示“落地”，不延伸、不锁方向。<b>预览层只留它。</b></div>
+    </div>
+    <div style="flex:1;min-width:180px;background:#fdf0ec;border:1px solid #f3cdc2;border-radius:12px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:#b3402a;">❌ 投射阴影 Cast</div>
+      <div style="font-size:12px;line-height:1.6;color:#444;margin-top:6px;">主光源被遮挡投出的完整影子，有方向、会延伸。烧进原料则跨场景必穿帮，<b>合成时按新场景重做。</b></div>
+    </div>
+    <div style="flex:1;min-width:180px;background:#f4f5f7;border:1px solid #dfe2e8;border-radius:12px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:#6b7280;">❌ 一键投影 Drop</div>
+      <div style="font-size:12px;line-height:1.6;color:#444;margin-top:6px;">设计软件一键加的偏移均匀阴影，廉价“悬浮感”，<b>角色资产一律不用。</b></div>
+    </div>
+  </div>
+
+  <div style="margin-top:22px;background:#fff;border:1px solid #e6e8ec;border-radius:14px;padding:16px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:10px;">两个问题的直接回答</div>
+    <div style="font-size:13px;line-height:1.8;color:#3c424d;">
+      <b>Q1 要不要背景？</b> 库存标准单元<b>不带场景背景</b>；每个角色固定给 <b>透明底（主）＋纯白底（预览）</b>双版本即可覆盖“灵活合成”和“直接可用”。场景属成品层，按项目做、不进标准库。<br>
+      <b>Q2 要不要投影？</b> 透明原料<b>零投影</b>；纯白预览<b>只留极淡接触阴影</b>（足底一小团）；场景成品才用完整投影。
+    </div>
+  </div>
+
+  <div style="margin-top:14px;background:linear-gradient(135deg,#f6f1e8,#f3ece0);border:1px solid #e0d3bd;border-radius:14px;padding:16px;">
+    <div style="font-size:14px;font-weight:700;color:#7a5d2e;">千面工坊现状对照与建议</div>
+    <div style="font-size:13px;line-height:1.8;color:#5a4a2e;margin-top:8px;">
+      · <b>已达标</b>：kit_standard_cell.py 已同时产出「白底（极淡接触阴影）＋透明版」，命中①②两层 ✅<br>
+      · <b>建议1</b>：把<b>透明版确立为权威主资产</b>（master of record），白底版明确定位为“预览/目录版”；<br>
+      · <b>建议2</b>：把阴影口径写死——脚本只生成足底椭圆接触阴影（低不透明度、无偏移），cast/drop 一律不生成；<br>
+      · <b>建议3</b>：每个标准单元固定三件套「透明PNG（主）＋纯白PNG（预览），场景版按需」。
+    </div>
+  </div>
+
+  <div style="font-size:11px;color:#9aa0aa;margin-top:14px;line-height:1.7;">依据：Adobe Stock PNG 规范、Unity/Unreal 资产交付、itch.io 角色参考板、阿里云/腾讯云数字人、电商白底图（抖音/亚马逊口径）、产品摄影 contact/cast shadow 定义等公开资料。配套文字规范：references/asset-background-shadow-spec.md</div>
+</div>
+</body>
+</html>

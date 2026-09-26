@@ -1,14 +1,16 @@
 {
-  "profile_id": "gates-realhuman-v1",
-  "display_name": "真人写实角色生产线（G0–G14）",
-  "version": "v1.0",
+  "profile_id": "gates-realhuman-gufeng-v1",
+  "display_name": "真人古风角色生产线（G0–G14）",
+  "version": "v0.1-draft",
   "head_ratio": 7.3,
-  "head_ratio_note": "成人真人约 7–8 头身，默认 7.3；性别/身高/年龄由规格卡定义，不做 Q 版化",
+  "head_ratio_note": "成人真人约 7–8 头身，默认 7.3；古风人物不做 Q 版化；性别/身高/年龄由规格卡定义",
   "style_token": "realphoto",
-  "material": "真人写实摄影质感的年轻成人人物，未精修原片直出、零磨皮零美颜：真实皮肤可见自然毛孔与皮纹颗粒；男性角色可有刚刮净的极淡青色胡茬影（不浓密、不连片、不邋遢）；鼻周与耳侧轻微自然泛红；鼻头/额头/手背自然皮脂的微弱哑光油光（区别于打蜡/塑料/瓷釉高光）；肤色健康通透、有真实细微不匀，不泛黄不发暗、不偏色；全画幅 85mm f/1.8、Kodak Portra 400 质感加轻微胶片颗粒、纪实人像；胸像与面部特写用右前方 45 度柔和侧窗光扫出皮肤纹理，全身母版与五视图用正面为主、轻微方向的柔和窗光（保证各角度服装色一致、不半脸暗、白底无投影）；真实毛发纤维与发丝层次、真实布料纹理与自然褶皱、真实人体解剖与军人/训练体态；非 3D 渲染、非卡通、非插画、非手办、非塑料/蜡像皮肤",
+  "style_token_note": "复用 realhuman 的 realphoto token（写真人像底层一致）；古风差异由 material/world/forbidden 与 profile-gufeng.md 承载，不另开 token 以避免 caption 空间膨胀",
+  "material": "真人写实摄影质感的古风人物，未精修原片直出、零磨皮零美颜：真实皮肤可见自然毛孔与皮纹颗粒；男性角色可有刚刮净的极淡青色胡茬影（不浓密、不连片、不邋遢）；鼻周与耳侧轻微自然泛红；鼻头/额头/手背自然皮脂的微弱哑光油光（区别于打蜡/塑料/瓷釉高光）；肤色健康通透、有真实细微不匀，不泛黄不发暗、不偏色；全画幅 85mm f/1.8、Kodak Portra 400 质感加轻微胶片颗粒、纪实人像；胸像与面部特写用右前方 45 度柔和窗纸光扫出皮肤纹理，全身母版与五视图用正面为主、轻微方向的柔和窗光（保证各角度服装色一致、不半脸暗、白底无投影）；真实毛发纤维与发丝层次、真实丝绸/棉麻/轻纱布料纹理与自然褶皱、真实人体解剖与自然体态；服装为古风汉服形制（交领右衽、束发或戴冠、暗纹刺绣、宽袖或窄袖按形制），非现代服饰；非 3D 渲染、非卡通、非插画、非手办、非塑料/蜡像皮肤",
   "background": {
     "default": "纯白摄影棚背景 #FFFFFF，均匀柔和棚拍光，脚下自然柔和的中性灰接触阴影",
-    "world": "现代都市写实环境：城市街头、写字楼与公寓、咖啡厅、通勤场景等真实空间，自然光影、电影感色调；具体城市/季节/职业由规格卡定义；禁止卡通化与风格化渲染"
+    "default_note": "G1–G7 资产单元保持纯白底（与 realhuman 一致，保证抠图与拼板一致）；宣纸底+水墨暗纹仅用于 G8 角色设定板的 board_theme，见 profile-gufeng.md §7",
+    "world": "古代东方写实环境：书院书斋、园林水榭、客栈大堂、渡口舟头、竹林山野等真实空间，木质窗棂、竹帘、屏风、纸灯笼、青石地面，自然光影与电影感色调；具体场景/季节/身份由规格卡定义；禁止现代建筑、电器、家具与器物"
   },
   "forbidden": [
     "画面零文字/字母/数字/logo/水印/标注线（规格卡登记的签名印花除外）",
@@ -16,9 +18,15 @@
     "禁止 3D 渲染感、卡通化、手办质感、塑料/打蜡/瓷釉/陶瓷/娃娃/橡胶皮肤、蜡像感、磨皮过度、Airbrush、光滑无瑕、均匀假脸、数字 HDR、油腻高光、插画感、动漫风、赛璐璐",
     "禁止满脸瑕疵痘印、肤色泛黄发暗偏色、蜡黄沧桑；男性角色禁止密胡茬/根根短须/连片胡茬（只允许刚刮净的极淡青色影）",
     "全身母版与五视图禁止强烈侧光造成半脸暗或白底投影（45 度侧窗光仅用于胸像/面部特写）",
-    "禁止 Q 版头身比、夸张五官比例、萌系大眼、网红滤镜脸、过度美颜、与角色设定不符的妆容",
+    "禁止 Q 版头身比、夸张五官比例、萌系大眼、网红滤镜脸、过度美颜",
     "禁止牙齿崩坏、手指畸形/多指/融指、五官不对称、双眼大小不一",
-    "无彩虹色、紫粉渐变、重度光污染、满版噪点"
+    "无彩虹色、紫粉渐变、重度光污染、满版噪点",
+    "禁止影楼风浓妆：粗眼线、假睫毛、网红腮红、欧式修容、亮片眼影、过度口红",
+    "禁止塑料感发饰、廉价水钻、亮片、满屏刺绣、金线堆砌、反光化纤面料",
+    "禁止交领左衽、和服/韩服形制混淆、汉服元素拼贴（如左衽交领配马面裙）",
+    "禁止现代发型：披肩直发、齐刘海、染发、丸子头、脏辫、光头（除非角色设定）",
+    "禁止现代道具：手机、眼镜、塑料瓶、手表、电器、现代箱包、运动鞋",
+    "禁止古装影楼写真风：过度磨皮+浓妆+廉价亮片+塑料头饰+网红 pose 的组合"
   ],
   "canvas": {
     "standard_cell": [
@@ -182,7 +190,7 @@
         "微表情板"
       ],
       "board": "micro_expression",
-      "note": "真人线默认裁剪、按需启用"
+      "note": "古风线默认裁剪、按需启用"
     },
     {
       "id": "G11",
@@ -208,7 +216,7 @@
     },
     {
       "id": "G13",
-      "name": "造型变体",
+      "name": "形制变体",
       "core": false,
       "outputs": [
         "造型母版",
@@ -216,7 +224,7 @@
         "表情"
       ],
       "script": "kit_style_board.py",
-      "note": "真人线＝换造型/服装，不换材质画风"
+      "note": "古风线＝换汉服形制/造型（宋制/唐制/武侠），不换材质画风；身份层（发型签名/五官/头身）必须冻结"
     },
     {
       "id": "G14",
@@ -227,7 +235,7 @@
         "训练外指南"
       ],
       "script": "kit_trainset.py",
-      "note": "库内不训练；真人 min_images=30"
+      "note": "库内不训练；古风 min_images=30"
     }
   ],
   "units": {
@@ -240,7 +248,7 @@
       {
         "key": "1微笑",
         "slug": "expr1-smile",
-        "en": "subtle closed-mouth confident smile"
+        "en": "subtle closed-mouth calm smile"
       },
       {
         "key": "2思考",
@@ -248,9 +256,9 @@
         "en": "thoughtful contemplative expression"
       },
       {
-        "key": "3露齿笑",
-        "slug": "expr3-toothy-smile",
-        "en": "natural open-mouth smile showing teeth"
+        "key": "3浅笑",
+        "slug": "expr3-gentle-smile",
+        "en": "gentle warm smile, restrained"
       },
       {
         "key": "4惊讶",
@@ -275,53 +283,57 @@
       "L3"
     ],
     "poses": {
-      "A1挥手": "waving one hand in casual greeting",
-      "A2抱胸": "arms crossed",
-      "A3插兜": "one or both hands in pants pockets",
-      "A4整理袖口": "adjusting shirt cuff",
-      "A5看表": "checking a wristwatch",
-      "B1行走": "natural confident walking stride",
-      "B2端坐": "sitting upright with good posture",
-      "B3靠墙": "leaning against a wall",
-      "B4奔跑": "running"
+      "A1执扇": "holding a round silk fan in a relaxed gesture",
+      "A2负手": "hands clasped behind back",
+      "A3作揖": "cupping hands in a traditional greeting gesture",
+      "A4持卷": "holding an unfolded scroll or book",
+      "A5抚案": "hand resting on a wooden desk",
+      "B1行走": "natural walking stride in long robes",
+      "B2端坐": "sitting upright on a mat or wooden chair",
+      "B3倚栏": "leaning against a wooden railing",
+      "B4策马": "holding horse reins in riding posture"
     },
     "held": {
-      "C1看手机": "looking at a smartphone",
-      "C2持咖啡": "holding a takeaway coffee cup",
-      "C3拎包": "carrying a briefcase or shoulder bag",
-      "C4持平板": "holding a tablet or laptop computer"
+      "C1持书卷": "holding an unfolded paper scroll",
+      "C2执团扇": "holding a round silk fan",
+      "C3持油纸伞": "holding an oil-paper umbrella",
+      "C4持长剑": "holding a straight sword (jian)"
     },
     "scenes": [
-      "SCN-01 都市街头行走",
-      "SCN-02 写字楼/办公室",
-      "SCN-03 咖啡厅",
-      "SCN-04 公寓窗边",
-      "SCN-05 夜景通勤"
+      "SCN-01 书院书斋",
+      "SCN-02 园林水榭",
+      "SCN-03 客栈大堂",
+      "SCN-04 渡口舟头",
+      "SCN-05 月夜竹林"
     ]
   },
   "style_slots": [
     {
       "slot": "R1",
-      "name": "默认造型（主资产线）",
+      "name": "宋制素雅（主资产线）",
       "is_primary": true
     },
     {
       "slot": "R2",
-      "name": "商务正装",
+      "name": "唐制圆领袍",
       "status": "optional"
     },
     {
       "slot": "R3",
-      "name": "休闲日常",
+      "name": "武侠劲装",
       "status": "optional"
     },
     {
       "slot": "R4",
-      "name": "运动/其他造型",
+      "name": "常服便装",
       "status": "optional"
     }
   ],
-  "style_slots_note": "真人线 G13 的『风格变体』＝造型/服装变体（different outfits），不是材质或画风切换；身份层（发型签名/五官/头身/配饰）必须冻结。",
+  "style_slots_note": "古风线 G13 的『形制变体』＝汉服形制/服装变体（宋制/唐制/武侠/常服），不是材质或画风切换；身份层（发型签名/五官/头身/配饰）必须冻结。形制口径见 profile-gufeng.md §4。",
+  "board_theme": {
+    "character_sheet": "gufeng-xuanzhi",
+    "note": "G8 角色设定板使用宣纸底+水墨暗纹+书法标题主题；v0.1 先复用现有板型渲染，board_theme 仅作声明，boards.py 适配为后续优化项"
+  },
   "runtime": {
     "default": "doubao-native",
     "providers": {
@@ -332,14 +344,14 @@
         "model": "seedream_5.0_pro",
         "multi_ref": true,
         "native_sizes": true,
-        "note": "豆包运行时默认；每请求单图，参考图实际传入 image_reference_url_list；真人写实已完成真机回归（首个真人角色）"
+        "note": "豆包运行时默认；古风写实质感与 realhuman 共用同一模型，形制服从度待 KR-03 真机验证"
       }
     },
-    "other_providers": "openrouter / google / openai / ark / custom 的能力表与配置同 gates-blindbox3d-v1.json 的 runtime 块及 references/runtime-portability.md；真人写实风格目前仅豆包完成真机验证，其余提供商均未做真人写实真机回归，接入前必须跑最小再验证，不得假设服从度一致。",
-    "switch_rule": "真人写实默认且已验证豆包 seedream_5.0_pro；换提供商/模型须重跑 G1/G2/G3/G7 最小再验证，prompt-rewrite-rules 的服从度结论不得跨模型照搬。"
+    "other_providers": "openrouter / google / openai / ark / custom 的能力表与配置同 gates-realhuman-v1.json 的 runtime 块及 references/runtime-portability.md；古风写实质感目前仅豆包 seedream_5.0_pro 启动真机验证，其余提供商均未做古风真机回归。",
+    "switch_rule": "古风写实默认且仅验证豆包 seedream_5.0_pro；换提供商/模型须重跑 G1/G2/G3/G7 最小再验证，尤其汉服形制服从度不得跨模型照搬。"
   },
   "trainset": {
-    "slot_dir": "R1-真人写实_v1.0",
+    "slot_dir": "R1-古风写实_v0.1",
     "min_images": 30,
     "target_count": 47,
     "framing_repeats": {
@@ -349,6 +361,6 @@
     },
     "val_count": 5,
     "config_template": "../../templates/trainset.config.example.json",
-    "note": "真人写实下限 min_images=30（kit_trainset/kit_asset_index 读 config，缺省 40）；目标区间 30–47，不删全身图"
+    "note": "古风写实下限 min_images=30（与 realhuman 一致）；目标区间 30–47，不删全身图；caption 须带形制关键词（如 song-style / jiaoling youren）以稳定训练集风格"
   }
 }

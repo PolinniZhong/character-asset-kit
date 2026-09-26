@@ -22,8 +22,8 @@ python3 /path/to/character-asset-kit/scripts/bin/kit_init_character.py \
 | G0 立项 | 无 | 与人共写规格卡：身份签名、HEX、版权声明、门裁剪 | 规格卡唯一现行；E2/E3/E4 不触发 |
 | G1 母版 | 白底母版（竖 1773×2364） | `kit_standard_cell` 落格（白/透两版） | 身份签名逐项对得上；占格/足底口径正确 |
 | G2 五视图 | 正/左右侧/背/3/4 侧 | 落格 → `kit_build_board --type multiview`（＋`--review`） | 五视角等高、镜像错误为 0；正面若复用母版必须重新落格，不得字节拷贝 |
-| G3 基础表情 | 6 表情（含中性），只许头肩 | `--type expression` | 五官 AU 叠加、不拧脸；标签画面外 |
-| G4 细节特写 | 发型/面部/鞋/配饰等方格 | `kit_standard_cell --square`（2364²）；深色道具 Vision 失败走 `kit_colorkey_cutout` | 微距皮肤满幅＋`--already-cutout`；无白边 |
+| G4 基础表情 | 6 表情（含中性），只许头肩 | `--type expression` | 五官 AU 叠加、不拧脸；标签画面外 |
+| G3 细节特写 | 发型/面部/鞋/配饰等方格 | `kit_standard_cell --square`（2364²）；深色道具 Vision 失败走 `kit_colorkey_cutout` | 微距皮肤满幅＋`--already-cutout`；无白边 |
 | G5 营销胸像 | 胸像（`--bust`） | 胸像落格（无阴影） | 顶边距 3.5%、下沿切上胸 |
 | G6 动作姿态 | A/B/C 组全身动作 | `--type pose`；复杂人体几何先出几何参考图再二步生成 | 手指数/关节正常；每动作单格返工不扰其他格 |
 | G7 道具 | 单体方格＋比例对照＋手持关系 | 单体走 `--square --no-shadow`（**不要**用 `--fig-ratio/--sole-ratio` 组合，必然裁顶） | 单体完整；手持比例经用户确认 |

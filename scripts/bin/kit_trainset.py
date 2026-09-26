@@ -183,8 +183,8 @@ def select_units(char_dir, cfg):
                     add(p, "G11", slug, "full",
                         f"full body, {en}, neutral standing pose", f"机位-{zh}")
 
-    # G3/G10 表情（基础 + 微表情，face）
-    for p in white_pngs_under(os.path.join(char_dir, "03_表情")):
+    # G4/G10 表情（基础 + 微表情，face）
+    for p in white_pngs_under(os.path.join(char_dir, "04_表情")):
         n = os.path.basename(p)
         m = re.search(r"表情-(\d)([^_]+)", n)
         if m:
@@ -204,7 +204,7 @@ def select_units(char_dir, cfg):
                 f"微表情-{fam}{lvl}")
 
     # G4 细节（face 组的极端特写）
-    for p in white_pngs_under(os.path.join(char_dir, "04_细节特写")):
+    for p in white_pngs_under(os.path.join(char_dir, "03_细节特写")):
         n = os.path.basename(p)
         m = re.search(r"细节-(\d[^_]+)", n)
         if m:

@@ -40,8 +40,8 @@ license: MIT
 ├── subjectmask (+.swift)          # macOS 抠图二进制（init 自动带）
 ├── 01_母版/                        # G1 白底母版（竖3:4）＋透明版
 ├── 02_多视图/单图 拼板 俯仰视线/    # G2 五视图＋视线；G11 俯仰
-├── 03_表情/单图 拼板 微表情矩阵/    # G3 基础表情；G10 微表情
-├── 04_细节特写/单图 拼板            # G4 六个签名细节
+├── 03_细节特写/单图 拼板 微表情矩阵/    # G4 基础表情；G10 微表情
+├── 04_表情/单图 拼板            # G4 六个签名细节
 ├── 05_营销胸像/                    # G5 头肩胸像
 ├── 06_动作姿态/单图 拼板            # G6 A/B/C 组
 ├── 07_道具/单体独立图 手持关系 配饰变体 拼板   # G7
@@ -60,8 +60,8 @@ license: MIT
 | G0 立项 | 规格卡＋资产清单＋目录树 | `kit_init_character.py` | gates-g0-g9.md §G0 |
 | G1 母版 | 白底母版＋透明版 | `kit_standard_cell.py`、subjectmask | gates-g0-g9.md §G1 |
 | G2 多视图 | 五视图单图＋拼板（含验收版） | standard_cell、`kit_build_board.py --type multiview` | gates-g0-g9.md §G2 |
-| G3 表情 | 6 基础表情（头肩）＋板 | standard_cell `--bust`、build_board expression | gates-g0-g9.md §G3 |
-| G4 细节特写 | 6 签名细节方格＋板 | standard_cell `--square`、build_board detail | gates-g0-g9.md §G4 |
+| G4 表情 | 6 基础表情（头肩）＋板 | standard_cell `--bust`、build_board expression | gates-g0-g9.md §G3 |
+| G3 细节特写 | 6 签名细节方格＋板 | standard_cell `--square`、build_board detail | gates-g0-g9.md §G4 |
 | G5 营销胸像 | 前 3/4 胸像 | standard_cell `--bust` | gates-g0-g9.md §G5 |
 | G6 动作姿态 | A 手势/B 身势/C 职业动作＋板 | standard_cell（坐姿 `--scale-factor 0.58`）、build_board pose | gates-g0-g9.md §G6 |
 | G7 道具 | 单体图→比例对照→手持关系＋板 | standard_cell `--square`、build_board prop | gates-g0-g9.md §G7 |
@@ -84,6 +84,7 @@ license: MIT
 5. 用户要扩展门：读 `references/gates-g10-g14.md` 对应章节。
 6. 换画风/换门径/换插槽：读 `references/style-profiles.md` 与对应内置 profile（`profiles/gates-blindbox3d-v1.json` 或 `profiles/gates-realhuman-v1.json`，真人增量见 `references/profile-realhuman.md`），另存 profile 副本、不改内置文件；门裁剪副本放库根 `profiles/`，命名见 style-profiles §5。
 7. 换生图模型/运行时（OpenAI、方舟、兼容网关、本地 CUDA）：读 `references/runtime-portability.md`，按 profile 的 `runtime` 块配置，并跑该文 §4 的最小再验证后再批量生产。
+8. 确定角色资产的背景与投影（标准单元交付、抠图落格、场景合成）：读 `references/asset-background-shadow-spec.md`——三层资产模型、透明版为权威主资产、预览只留极淡接触阴影、场景属成品层。
 
 ## 脚本速查（库根＝存放角色包的目录；脚本路径相对本 skill）
 
