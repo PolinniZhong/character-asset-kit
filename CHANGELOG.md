@@ -28,6 +28,12 @@
   - 真人古风：温以宁（女）、候书（男）
 - 每张商卡含主视觉+五视图+表情+细节+道具+动作，一图看清整套资产
 
+**npm 分发（installer CLI）**
+- 包已发布到 npm：https://www.npmjs.com/package/character-asset-kit （`character-asset-kit@1.4.0`，169.4 kB / 43 文件）
+- 新增零依赖 installer `bin/install.js`：`npx character-asset-kit install [target|all] [--scope user|project]`，一键把 Skill 复制到 Claude/Codex/Cursor/DSH/豆包 的 skills 目录；user 级按各 Agent marker 智能探测、project 级全装 4 个；解决 `npx skills add` 走 GitHub clone 在国内/企业网络不稳
+- 新增 Actions `publish-npm.yml`：打 `v*` tag 自动发 npm（repo secret `NPM_TOKEN`，granular token + Bypass 2FA，已配置）
+- 认证事实：npm 2026 起 2FA 仅支持 WebAuthn security key/passkey（**已移除 TOTP/Google Authenticator**）；本机默认淘宝只读镜像，发布须显式 `--registry https://registry.npmjs.org/`；发布后即时 npx 测试若命中 `_npx` 坏缓存，清 `npm cache/_npx` 即可
+
 **工程修复**
 - 修复 `build_card` detail/prop items 缺 `card_label` 的 KeyError（expression 有 .get 默认值但 detail/prop 没有）
 - bad-cases 新增 BC-34~BC-42：发型漂移/命名不一致/三级锚定/prop板型误用items/gaze front_ref过期/G14空目录/G12缺母版拼板/资产ID规则搞反/build_prop review bug
