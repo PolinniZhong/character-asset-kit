@@ -1,0 +1,16 @@
+# 备份 / 过程稿（即使 files 白名单包含目录，也不发布）
+**/*.bak
+**/*.p40bak
+**/*.p*bak
+**/*.v2bak
+**/*.v3bak
+**/*.gatebak
+**/*.orig
+**/*~
+
+# Python 缓存
+**/__pycache__/
+**/*.pyc
+
+# 系统杂项
+**/.DS_Store

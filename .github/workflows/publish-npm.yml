@@ -1,0 +1,33 @@
+name: Publish to npm
+
+# 打 tag（v*）时自动发布到 npm；GitHub 仍是开发主场，npm 是分发镜像。
+# 前置：仓库 Settings → Secrets and variables → Actions 添加 NPM_TOKEN
+# （npmjs.com → Access Tokens → Granular/Automation token，建议 Automation 免 2FA）。
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses:actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Verify package contents (dry-run)
+        run: npm pack --dry-run
+
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

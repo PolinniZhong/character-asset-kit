@@ -10,11 +10,23 @@ English: [README.en.md](README.en.md)
 
 ## 一分钟装上
 
+**方式一 · npm（推荐，国内/企业网络更稳）**：
+
+```bash
+# 一键装到所有已检测到的 Agent（Claude/Codex/Cursor/DSH/豆包）
+npx character-asset-kit install all
+
+# 或指定 Agent
+npx character-asset-kit install claude codex
+```
+
+**方式二 · 从 GitHub**：
+
 ```bash
 npx skills add PolinniZhong/character-asset-kit
 ```
 
-装好后对 Agent 说一句“用千面工坊建一个新角色”，一个角色会被做成整套**可复用、不崩脸**的资产：白底母版与五视图、表情板、动作姿态板、道具手持关系、机位视线、场景包、造型/风格变体、角色设定板与可审计台账；需要训练时还会自动备料数据集。
+两种方式安装的内容完全一致；npm 走全球 CDN，可用 `character-asset-kit@x.y.z` 锁版本，企业内网还能走 npm 镜像。装好后对 Agent 说一句“用千面工坊建一个新角色”，一个角色会被做成整套**可复用、不崩脸**的资产：白底母版与五视图、表情板、细节特写、动作姿态板、道具手持关系、机位视线、场景包、造型/风格变体、角色设定板与可审计台账；需要训练时还会自动备料数据集。
 
 ![一个母版产出的角色资产矩阵：五视图、表情、细节、动作、道具、微表情、机位视线、场景与设定板](docs/images/hero-asset-matrix.jpg)
 
@@ -56,8 +68,9 @@ npx skills add PolinniZhong/character-asset-kit
 
 > 商卡由 `kit_build_board.py --type card` 确定性拼板生成，标签在画面外不压像素；所有单图均经标准格落格与台账对账。
 
-## 现状（最新 v1.3.1，2026-09-24）
+## 现状（最新 v1.4.0，2026-09-26）
 
+- **npm 分发**：`npx character-asset-kit install all` 一键装到各 Agent 的 skills 目录（零依赖安装器，支持 user/project 作用域）；打 `v*` tag 由 GitHub Actions 自动发 npm。
 - **内置三套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）、`gates-realhuman-v1`（真人写实摄影）、**`gates-realhuman-gufeng-v1`（中国古风真人）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」，古风线核心是「低饱和淡雅色调＋丰富发型三级锚定」。
 - 方法论在两个完整 3D 角色（G0–G14 全门）上跑通；第三个角色由**全新对话只靠本 Skill** 完成 dogfooding（G0–G12，106 件媒体、17 件派生交付物、封存 0 ERROR/0 WARN，见 [`docs/DOGFOODING.md`](docs/DOGFOODING.md)）；真人写实 profile 也已在两个完整真人角色（KR-01 韩东、KR-02 姜书媛，G0–G14）上实证。
 - 画风、门集合、插槽、画幅全部 **profile 化**，**不绑定任何角色或画风**；新增风格只需选/复制 profile。
@@ -170,7 +183,7 @@ python3 -m unittest discover -s tests -v
 - **不做 LoRA 训练本身**：G14 只产出数据集（双 caption profile、分层 val、哈希校验）与训练外执行指南，训练在库外（kohya / ai-toolkit）。
 - 不做文章配图型插画、不模仿在世艺术家；真人写实摄影由 `gates-realhuman-v1` profile 支持（非默认，开工时显式选择）。
 - 脚本只做确定性像素工序与台账，不做审美判断；过门决策在人。
-- 不发 pip 包：调用方是 Agent，复制 Skill 目录即用。
+- 分发走 npm（`npx character-asset-kit install`，自带零依赖安装器）或直接复制 Skill 目录；不发 pip 包。
 
 ## 文档
 

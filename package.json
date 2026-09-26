@@ -1,0 +1,49 @@
+{
+  "name": "character-asset-kit",
+  "version": "1.4.0",
+  "description": "千面工坊·角色资产生产线：把新角色按 G0–G14 企业级门径做成跨角度/表情/动作/场景/可训练备料/可对账的 AIGC 角色资产库的 Agent Skill。内置 3D盲盒、真人写实、中国古风三套 profile。",
+  "keywords": [
+    "agent-skills",
+    "character",
+    "aigc",
+    "skill",
+    "claude",
+    "codex",
+    "cursor",
+    "image-generation",
+    "character-consistency",
+    "gufeng",
+    "chinese-ancient-style",
+    "seedream"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/PolinniZhong/character-asset-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PolinniZhong/character-asset-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PolinniZhong/character-asset-kit/issues"
+  },
+  "bin": {
+    "character-asset-kit": "bin/install.js"
+  },
+  "files": [
+    "bin/",
+    "SKILL.md",
+    "skill.yaml",
+    "references/",
+    "profiles/",
+    "scripts/",
+    "templates/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
