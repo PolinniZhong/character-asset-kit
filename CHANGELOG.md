@@ -2,6 +2,29 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## v1.4.1（2026-09-27）— G3/G4 门序整改全链路落地 ＋ 跨文件一致性硬门禁 ＋ E8 串号治本
+
+**G3/G4 对调「只落地一半」修复（企业化复核发现）**
+- 此前 v1.4.0 虽改了 profile/部分文档，但工具内嵌映射、trainset 扫描路径、库声明门名仍停在旧序，重扫档案会被静默翻转回本版全链路对齐 **G3=细节特写(detail) / G4=基础表情(expression)**：
+  - `kit_asset_index.py` STAGE_MAP / check reqs / GATE_LABELS、`kit_trainset.py` 扫描路径与 gate；
+  - 三份 profile slots、SKILL.md 插槽树、docs/DESIGN、evals/task_quality；
+  - 项目级两份 `00_库声明.json` gate_labels；7 个角色包档案重扫（KR 四包翻到新序、WL 三包零翻转）。
+
+**新增跨文件一致性硬门禁 `scripts/bin/check_consistency.py`（五条断言）**
+- 机械校验：①版本号多处一致；②门 id/门序在 profile·SKILL.md·工具映射·门径手册四处一致（G3/G4 核心词对齐）；③skill.yaml 声明 profiles 与 profiles/ 目录一致；④evals case 数与声称一致；⑤trigger_results 覆盖全部 case。
+- 已接入 `ci.yml` 为硬步骤：发版/改门序/增 profile·case 后任一处滞后即 CI 失败。
+
+**E8「asset_id 跨身份串号」治本**
+- 根因：母版被字节复制成多视图正面时，`--assign-ids` 只按内容指纹复用 asset_id、不校验资产身份。
+- `kit_cockpit.py _assign_one` 增加身份映射 `cid_owner`：复用须同时满足内容命中＋身份一致，否则新分配 ULID；KR-04 母版与多视图正面拆为各自独立 asset_id、仅共享 content_id。资产中心 `--verify` 通过（0 ERROR）。
+
+**清单与评测口径补全**
+- `skill.yaml` 真正升到当前版本并补全第三 profile（此前 npm tarball 内 skill.yaml 滞后为 1.3.1、只两套 profile）；
+- `trigger_results.json` 回填 N11/N12（依据边界重定义 run4/run6 实测不触发），example 模板同步。
+- 43 单测全绿；项目级回归全绿。
+
+---
+
 ## v1.4.0（2026-09-26）— 古风真人 profile ＋ G3/G4 门序对调 ＋ 角色成品展示
 
 **新增第三套风格 profile：`gates-realhuman-gufeng-v1`（中国古风真人）**

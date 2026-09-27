@@ -2,9 +2,9 @@
 # 本文件是 skill 的机器可读清单；人读说明见 SKILL.md。评测基线在评测跑完后回填，null＝尚未建立。
 id: character-asset-kit
 display_name: 千面工坊
-version: 1.3.1
+version: 1.4.1
 status: released               # development / released / deprecated
-release_date: 2026-09-24
+release_date: 2026-09-27
 owner: PolinniZhong
 license: MIT
 repository: https://github.com/PolinniZhong/character-asset-kit
@@ -22,7 +22,7 @@ keywords:
   - blindbox
 description: >-
   多风格角色资产生产线：把一个新角色按企业级门径（G0–G14）做成可复用、可对账、
-  可训练备料的 AIGC 角色资产库。一个 Skill 内置多套风格 profile（3D 盲盒、真人写实），
+  可训练备料的 AIGC 角色资产库。一个 Skill 内置多套风格 profile（3D 盲盒、真人写实、中国古风真人），
   门序列与确定性脚本复用，仅切换 profile。
 security_level: medium         # low / medium / high
 
@@ -94,6 +94,21 @@ profiles:
           asset_spec: 90
           overall: 85
         note: "L3 简化版：相同提示词独立生图4次+标准落格，用户盲评4张完全同分(CV=0%)，远低于≤15%通过线；诚实边界：本版测生图波动而非完整Skill流程(门径/过门/沉淀/台账)波动；皮肤80为最低维度(放大看有蜡感/AI味)，正面光感获好评待回灌；报告 06_企业化_千面工坊/L3_波动评测/（不进公开仓）"
+  - id: gates-realhuman-gufeng-v1
+    display_name: 中国古风真人
+    profile_file: profiles/gates-realhuman-gufeng-v1.json
+    default: false
+    head_ratio: 7.3
+    style_token: realphoto
+    evals:
+      trigger_precision:
+        precision: 1.0
+        recall: 1.0
+        specificity: 1.0
+        runs_per_case: 3
+        note: "三轮基线为 Skill 级（不分 profile），见顶层 evals.trigger_precision：26case 最终 Precision/Specificity 1.0、Recall 均值 0.976（仅 S11 一次边界波动），release 门禁通过"
+      task_completion:
+        note: "古风双角色实证：KR-03温以宁 G0–G14 全门、KR-04候书 G0–G12（见 references/profile-gufeng.md）；本版未单独跑 L2 盲评/L3 波动评测，复用真人写实线方法论与 G0–G14 门径"
 
 evals:
   dir: evals

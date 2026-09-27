@@ -193,7 +193,7 @@ def select_units(char_dir, cfg):
                 print(f"  [warn] config.expr 无此槽位，跳过：{key}")
                 continue
             slug, en = expr_map[key]
-            add(p, "G3", slug, "face",
+            add(p, "G4", slug, "face",
                 f"head-and-shoulders bust, {en}", f"表情-{key}")
             continue
         m = re.search(r"微表情-(E\d)(L\d)", n)
@@ -203,7 +203,7 @@ def select_units(char_dir, cfg):
                 f"head-and-shoulders bust, {MICRO_FAMILY[fam]} expression, {MICRO_LEVEL[lvl]}",
                 f"微表情-{fam}{lvl}")
 
-    # G4 细节（face 组的极端特写）
+    # G3 细节（face 组的极端特写）
     for p in white_pngs_under(os.path.join(char_dir, "03_细节特写")):
         n = os.path.basename(p)
         m = re.search(r"细节-(\d[^_]+)", n)
@@ -213,7 +213,7 @@ def select_units(char_dir, cfg):
                 print(f"  [warn] config.detail 无此槽位，跳过：{key}")
                 continue
             slug, en = detail_map[key]
-            add(p, "G4", slug, "face", f"extreme close-up of {en}", f"细节-{key}")
+            add(p, "G3", slug, "face", f"extreme close-up of {en}", f"细节-{key}")
 
     # G5 营销胸像（face）
     for p in white_pngs_under(os.path.join(char_dir, "05_营销胸像")):

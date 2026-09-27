@@ -33,8 +33,8 @@ MANIFEST_NAME = "资产清单.json"
 STAGE_MAP = {
     "母版": ("master", "G1"),
     "多视图": ("multiview", "G2"),
-    "表情": ("expression", "G3"),
-    "细节特写": ("detail", "G4"),
+    "表情": ("expression", "G4"),
+    "细节特写": ("detail", "G3"),
     "营销胸像": ("bust", "G5"),
     "动作姿态": ("pose", "G6"),
     "道具": ("prop", "G7"),
@@ -605,10 +605,10 @@ def check_registry(char_dir, reg, mf):
                "master 白底+透明"),
         "G2": (lambda: len({m["label"] for m in media if m.get("unit_type") == "multiview"
                             and m.get("finish") == "white"}) >= 5, "multiview ≥5 视角"),
-        "G3": (lambda: has("expression", None,
+        "G3": (lambda: has("detail"), "detail ≥1"),
+        "G4": (lambda: has("expression", None,
                            lambda m: str(m.get("label", "")).startswith(("0", "中性"))),
                "expression 第0格中性"),
-        "G4": (lambda: has("detail"), "detail ≥1"),
         "G5": (lambda: has("bust"), "bust ≥1"),
         "G6": (lambda: has("pose"), "pose ≥1"),
         "G7": (lambda: has("prop", None, lambda m: m.get("role") == "solo"), "prop solo ≥1"),
@@ -761,7 +761,7 @@ DELIV_LABELS = {
 DELIV_VARIANT = {"clean": "干净版", "review": "验收版", "final": "成品"}
 FINISH_LABELS = {"white": "白底", "transparent": "透明", "flat": "平底"}
 GATE_LABELS = {
-    "G0": "立项", "G1": "母版", "G2": "五视图", "G3": "表情", "G4": "细节",
+    "G0": "立项", "G1": "母版", "G2": "五视图", "G3": "细节特写", "G4": "基础表情",
     "G5": "胸像", "G6": "动作", "G7": "道具", "G8": "拼板/商卡", "G9": "封存",
     "G10": "微表情矩阵", "G11": "机位与视线", "G12": "场景包", "G13": "风格变体",
     "G14": "训练素材备料",

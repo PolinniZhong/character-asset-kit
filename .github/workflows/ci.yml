@@ -49,3 +49,9 @@ jobs:
 
       - name: Secret scan
         run: python scripts/bin/secret_scan.py
+
+      # 跨文件一致性硬门禁（版本/门序/profile/evals/结果覆盖）：
+      # 任一落点口径滞后即失败。新增 profile / case、改门序或发版后，须同步
+      # skill.yaml、package.json、profiles、SKILL.md、门径手册与 trigger_results。
+      - name: Cross-file consistency
+        run: python scripts/bin/check_consistency.py

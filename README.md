@@ -68,7 +68,7 @@ npx skills add PolinniZhong/character-asset-kit
 
 > 商卡由 `kit_build_board.py --type card` 确定性拼板生成，标签在画面外不压像素；所有单图均经标准格落格与台账对账。
 
-## 现状（最新 v1.4.0，2026-09-26）
+## 现状（最新 v1.4.1，2026-09-27）
 
 - **npm 分发**：`npx character-asset-kit install all` 一键装到各 Agent 的 skills 目录（零依赖安装器，支持 user/project 作用域）；打 `v*` tag 由 GitHub Actions 自动发 npm。
 - **内置三套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）、`gates-realhuman-v1`（真人写实摄影）、**`gates-realhuman-gufeng-v1`（中国古风真人）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」，古风线核心是「低饱和淡雅色调＋丰富发型三级锚定」。
