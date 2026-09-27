@@ -2,6 +2,20 @@
 
 本文件记录 character-asset-kit 的变更；方法论/提示词层的变化同时回灌 references/ 并在门径文档标注。
 
+## v1.4.2（2026-09-27）— 文档一致性对齐（无功能变更）
+
+企业化复核后，把散落文档里「版本号 / profile 数量 / BC 编号 / 脚本清单 / 草稿标记」与当前实际状态全部对齐：
+
+- **版本号四处一致**：skill.yaml / package.json / README.md「现状」/ SKILL.md「版本」行；`check_consistency` 断言①已把 SKILL.md 版本行纳入机械校验（此前只查前三处）。
+- **三套 profile 口径**：README.en.md 由「Two profiles」改为 Three、补 gufeng profile 与 KR-03/KR-04 古风角色；README/README.en 目录树 profiles 行补全；`profile-realhuman.md`「两个 profile」改三个。
+- **BC 编号**：README.md / README.en.md / docs/DESIGN.md 的「BC-01…33」全部更正为 **BC-01…42**。
+- **脚本工具清单**：README/README.en/DESIGN 的 bin 列表补 `secret_scan`、`check_consistency`。
+- **古风 profile 升版**：`gates-realhuman-gufeng-v1.json` 由 `v0.1-draft` 升 **v1.0**（KR-03 G0–G14、KR-04 G0–G12 已实证）；`profile-gufeng.md` §12 补 v1.0 条目、§10 验证状态由「验证中」改「已实证」。
+- **历史快照保留**：DOGFOODING.md 顶部补「本报告记录于 G3/G4 对调前」的门序口径注记，正文不改写。
+- 43 单测全绿；check_consistency 5/5。
+
+---
+
 ## v1.4.1（2026-09-27）— G3/G4 门序整改全链路落地 ＋ 跨文件一致性硬门禁 ＋ E8 串号治本
 
 **G3/G4 对调「只落地一半」修复（企业化复核发现）**

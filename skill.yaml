@@ -2,7 +2,7 @@
 # 本文件是 skill 的机器可读清单；人读说明见 SKILL.md。评测基线在评测跑完后回填，null＝尚未建立。
 id: character-asset-kit
 display_name: 千面工坊
-version: 1.4.1
+version: 1.4.2
 status: released               # development / released / deprecated
 release_date: 2026-09-27
 owner: PolinniZhong

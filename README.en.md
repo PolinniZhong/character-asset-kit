@@ -10,6 +10,18 @@
 
 ## Install in a minute
 
+**Option 1 · npm (recommended; more reliable on corporate networks):**
+
+```bash
+# Install into every detected Agent (Claude/Codex/Cursor/DSH/Doubao)
+npx character-asset-kit install all
+
+# Or specify Agents
+npx character-asset-kit install claude codex
+```
+
+**Option 2 · From GitHub:**
+
 ```bash
 npx skills add PolinniZhong/character-asset-kit
 ```
@@ -30,10 +42,10 @@ Then tell your agent “use character-asset-kit to create a new character.” On
 
 ![A broken cell is re-generated alone: single-unit generation plus deterministic assembly keeps a failure from spreading to the board](docs/images/compare-one-shot.jpg)
 
-## Status (latest v1.3.1, 2026-09-24)
+## Status (latest v1.4.2, 2026-09-27)
 
-- **Two built-in style profiles**: `gates-blindbox3d-v1` (3D blind-box toy, default) and **`gates-realhuman-v1` (photorealistic photography)** — the gates and deterministic scripts are fully reused; switching style only switches the profile. The real-human line centers on a "real-skin methodology" (visible pores / very faint clean-shaven stubble / natural matte sebum + 85mm film optics, zero skin smoothing) to avoid a plastic/wax look.
-- The methodology was proven end-to-end on two complete 3D characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media, 17 derived deliverables, sealed 0 ERROR / 0 WARN — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md)). The real-human profile was also validated on two complete photorealistic characters (KR-01 male / KR-02 female, G0–G14).
+- **Three built-in style profiles**: `gates-blindbox3d-v1` (3D blind-box toy, default), **`gates-realhuman-v1` (photorealistic photography)**, and **`gates-realhuman-gufeng-v1` (Chinese ancient-style photorealism)** — the gates and deterministic scripts are fully reused; switching style only switches the profile. The real-human line centers on a "real-skin methodology" (visible pores / very faint clean-shaven stubble / natural matte sebum + 85mm film optics, zero skin smoothing) to avoid a plastic/wax look; the gufeng line centers on "low-saturation muted tones plus a three-level anchoring of elaborate hairstyles."
+- The methodology was proven end-to-end on two complete 3D characters (all gates G0–G14). A third character was produced by a **fresh conversation using only this Skill** (dogfooding; G0–G12, 106 media, 17 derived deliverables, sealed 0 ERROR / 0 WARN — see [`docs/DOGFOODING.md`](docs/DOGFOODING.md)). The real-human profile was also validated on two complete photorealistic characters (KR-01 male / KR-02 female, G0–G14). The gufeng profile was validated on two complete ancient-style characters — KR-03 Wen Yining (female, bookshop owner, G0–G14) and KR-04 Hou Shu (male, Jiangnan scholar, G0–G12).
 - Style, gate set, slots, and canvases are all **profile-driven**, **not bound to any character or style**; adding a style only needs selecting/copying a profile.
 - **Evaluation & engineering**: [`evals/`](evals/) provides L1 trigger tests, L2 quality A/B (bare model vs Skill) and a five-dimension rubric; `skill.yaml` is structured metadata; GitHub Actions CI (Python 3.10/3.12/3.14) runs unit tests and secret scanning.
 - [`examples/CHAR-01-demo/`](examples/CHAR-01-demo/) ships **desensitized real deliverable boards** (10 images, G2–G12).
@@ -54,19 +66,20 @@ character-asset-kit/
 │   ├── gates-g10-g14.md         #   Micro-expressions / camera & gaze / scenes / style variants / training prep
 │   ├── prompt-framework.md      #   Six-section prompt templates
 │   ├── prompt-rewrite-rules.md  #   Evidence-based rewrite rules (210 runs)
-│   ├── bad-cases.md             #   Failure catalog BC-01…33
+│   ├── bad-cases.md             #   Failure catalog BC-01…42
 │   ├── acceptance-checklists.md #   Per-gate checklists
 │   ├── registry-rules.md        #   Registry E/W rule codes
 │   ├── runtime-portability.md   #   Multi-provider image backends + minimal re-validation
 │   └── style-profiles.md        #   Changing style / trimming gates
-├── profiles/                    # Style profiles: gates-blindbox3d-v1 (3D, default) / gates-realhuman-v1 (photorealistic)
+├── profiles/                    # Style profiles: gates-blindbox3d-v1 (3D, default) / gates-realhuman-v1 (photorealistic) / gates-realhuman-gufeng-v1 (Chinese ancient)
 ├── evals/                       # L1 trigger tests, L2 quality A/B tasks + rubric, stats script
 ├── templates/                   # Spec card, asset manifest, training config templates
 ├── scripts/                     # Deterministic steps (Python 3.10+ / Pillow)
 │   ├── charkit/                 #   Cutout, standard cells, nine board builders, fonts
 │   └── bin/                     #   init / standard_cell / colorkey_cutout /
 │                                #   build_board / asset_index / scene_board /
-│                                #   style_board / trainset / generate / secret_scan (+ subjectmask.swift)
+│                                #   style_board / trainset / generate / secret_scan /
+│                                #   check_consistency (+ subjectmask.swift)
 ├── tests/                       # Stdlib-only unittest (no network, no macOS Vision dependency)
 ├── examples/                    # Desensitized end-to-end walkthrough
 └── docs/                        # PRD / DESIGN (SDD) / DOGFOODING (Chinese)
@@ -144,7 +157,7 @@ python3 -m unittest discover -s tests -v
 - **No LoRA training itself**: G14 only produces the dataset (dual caption profiles, stratified val, hash checks) plus an out-of-repo execution guide; training happens outside (kohya / ai-toolkit).
 - Not for article illustration or imitating living artists; photorealistic humans are supported by the `gates-realhuman-v1` profile (non-default, chosen explicitly at kickoff).
 - Scripts handle deterministic pixel work and registry bookkeeping only; they make no aesthetic judgments. Gate decisions belong to humans.
-- No pip package: the caller is an Agent — just copy the Skill directory.
+- Distributed via npm (`npx character-asset-kit install`, with a zero-dependency installer) or by copying the Skill directory; no pip package.
 
 ## Documentation
 

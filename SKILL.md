@@ -10,11 +10,13 @@ license: MIT
 
 把"一个新角色"做成**可复用、可对账、可训练备料**的整套资产：身份签名先冻结，再逐单元生成、逐门验收，确定性脚本负责一切像素排版与台账。方法论来自一条真实跑通的生产线（两个角色走完 G0–G14、第三个角色 G0–G12 自用验证）与 210 张受控复现实验；门径、插槽、风格全部 **profile 化**，本 skill 不绑定任何具体角色或具体画风。
 
-**版本 v1.3.1（2026-09-24）**：
+**版本 v1.4.2（2026-09-27）**：
 - **v1.2**：生图运行时层解耦——默认仍走豆包 `seedream_5.0_pro`，新增 `kit_generate.py`（纯标准库）支持 OpenRouter 统一网关 / Google Gemini / OpenAI gpt-image / 火山方舟 / 任意兼容网关，含模型解析优先级、参考图上限预检、`--dry-run`、限流重试、非 PNG 归一；新增 `references/runtime-portability.md`（提供商矩阵与最小再验证）。
 - **v1.2.1（方舟真机验证修复）**：持密钥打通 `--provider ark` 后修掉四条**静态检查抓不到**的缺陷——图生图端点（方舟无 `/images/edits`，改走 `/images/generations` + JSON `image`）、**零水印**（方舟不传 `watermark` 默认 `true`，现始终显式 `false`）、错误分类（`BrokenPipeError` 不再被写成"网络不可达"）、密钥候选（`key_env` 支持候选表）。
 - **v1.2.2（参考图配置：新增一个维度）**：`prompt-rewrite-rules.md` **新增 §7**——**构图锚必须与目标构图同景别、且一次只给一个**；混景别双锚（如全身母版＋胸像锚）时模型**两张都不跟、把主体撑满整幅**；成品资产不能当构图锚。坏例 **BC-34**。
 - **v1.4（古风 profile ＋ 门序对调）**：新增**第三 profile** `profiles/gates-realhuman-gufeng-v1.json`（中国古风真人：低饱和淡雅色调、朦胧柔光、丰富发型三级锚定）＋ `references/profile-gufeng.md`；**G3/G4 门序对调**（细节特写提前于表情）；背景投影三层规范；README 附 4 角色商卡成品展示。古风男女 KR-03温以宁/KR-04候书实证，43 单测全绿。
+- **v1.4.1（一致性硬门禁＋E8 治本）**：新增 `scripts/bin/check_consistency.py` 五条断言（版本/门序/profile/evals/结果覆盖）接入 CI 硬门禁；修 G3/G4 对调「只落地一半」（工具内嵌映射/trainset 扫描/库声明门名全对齐 G3=细节/G4=表情）；`kit_cockpit _assign_one` 加身份映射治 E8 跨身份串号；skill.yaml 补全三 profile；43 单测全绿。
+- **v1.4.2（文档一致性对齐）**：README/README.en/SKILL/DESIGN 的版本号、三套 profile、BC-01…42、脚本工具清单全部对齐现状；古风 profile JSON 升 v1.0；断言①纳入 SKILL.md 版本行。
 - **v1.3（双 profile）**：新增**真人写实第二 profile** `profiles/gates-realhuman-v1.json`（7.3 头身、真实皮肤方法论、现实都市 world、G13 改为造型变体、训练集 min_images=30）＋ `references/profile-realhuman.md`；脚本向后兼容（dataset_slot／真人手持命名／可配 min_images）。**一个 Skill 多 profile、不拆分**；真人线目前仅豆包 seedream_5.0_pro 完成真机验证。
 - **v1.3.1（真人线修复＋L1 评测闭环）**：修真人 profile 端到端问题——G14 训练集 slot 按 config 解析（原硬编码 S slot 误报 E5）、道具板手持动态多行、变体插槽支持 R 前缀、裁剪门跳过；L1 触发边界按**任务形态**重定义（S12/S13 带角色语境触发、新增 N11/N12 裸话术合理不触发；堆词证伪），26 case 三轮 Precision/Specificity 100%、Recall 均值 97.6%，release 门禁通过；皮肤 v2.1 失败、胸像正面柔光、右肩留白回灌。43 单测全绿。
 - v1.1：第三个角色自用验证（dogfooding）8 条缺口回灌（清单模板内置 character_sheet、色键兜底脚本、方格口径 2364、CLI 假绿灯防护、空族跳过等，详见 CHANGELOG.md）。

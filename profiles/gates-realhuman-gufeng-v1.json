@@ -1,7 +1,7 @@
 {
   "profile_id": "gates-realhuman-gufeng-v1",
   "display_name": "真人古风角色生产线（G0–G14）",
-  "version": "v0.1-draft",
+  "version": "v1.0",
   "head_ratio": 7.3,
   "head_ratio_note": "成人真人约 7–8 头身，默认 7.3；古风人物不做 Q 版化；性别/身高/年龄由规格卡定义",
   "style_token": "realphoto",
@@ -344,10 +344,10 @@
         "model": "seedream_5.0_pro",
         "multi_ref": true,
         "native_sizes": true,
-        "note": "豆包运行时默认；古风写实质感与 realhuman 共用同一模型，形制服从度待 KR-03 真机验证"
+        "note": "豆包运行时默认；古风写实质感与 realhuman 共用同一模型，已在 KR-03（G0–G14）/KR-04（G0–G12）真机验证"
       }
     },
-    "other_providers": "openrouter / google / openai / ark / custom 的能力表与配置同 gates-realhuman-v1.json 的 runtime 块及 references/runtime-portability.md；古风写实质感目前仅豆包 seedream_5.0_pro 启动真机验证，其余提供商均未做古风真机回归。",
+    "other_providers": "openrouter / google / openai / ark / custom 的能力表与配置同 gates-realhuman-v1.json 的 runtime 块及 references/runtime-portability.md；古风写实质感已在豆包 seedream_5.0_pro 真机验证（KR-03/KR-04），其余提供商均未做古风真机回归。",
     "switch_rule": "古风写实默认且仅验证豆包 seedream_5.0_pro；换提供商/模型须重跑 G1/G2/G3/G7 最小再验证，尤其汉服形制服从度不得跨模型照搬。"
   },
   "trainset": {

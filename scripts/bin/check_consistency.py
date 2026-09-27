@@ -61,7 +61,7 @@ def gate_num(gid):
 # ------------------------------------------------------------ 五条断言
 
 def check_versions(yaml_d):
-    """① 版本号多处一致：skill.yaml == package.json，且 README「现状（最新 vX）」同步。"""
+    """① 版本号多处一致：skill.yaml == package.json，且 README「现状」、SKILL.md「版本」行同步。"""
     detail = []
     pkg = load_json("package.json")
     pv = str(pkg.get("version"))
@@ -73,6 +73,12 @@ def check_versions(yaml_d):
         rv = rm.group(1)
         detail.append(f"README「现状」v{rv}")
         if rv != pv:
+            ok = False
+    sm = re.search(r'版本\s*v?([0-9.]+)', read("SKILL.md"))
+    if sm:
+        sv = sm.group(1)
+        detail.append(f"SKILL.md「版本」v{sv}")
+        if sv != pv:
             ok = False
     return ok, detail
 

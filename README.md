@@ -68,7 +68,7 @@ npx skills add PolinniZhong/character-asset-kit
 
 > 商卡由 `kit_build_board.py --type card` 确定性拼板生成，标签在画面外不压像素；所有单图均经标准格落格与台账对账。
 
-## 现状（最新 v1.4.1，2026-09-27）
+## 现状（最新 v1.4.2，2026-09-27）
 
 - **npm 分发**：`npx character-asset-kit install all` 一键装到各 Agent 的 skills 目录（零依赖安装器，支持 user/project 作用域）；打 `v*` tag 由 GitHub Actions 自动发 npm。
 - **内置三套风格 profile**：`gates-blindbox3d-v1`（3D 盲盒手办，默认）、`gates-realhuman-v1`（真人写实摄影）、**`gates-realhuman-gufeng-v1`（中国古风真人）**——门径与确定性脚本完全复用，换风格只换 profile；真人线核心是「真实皮肤方法论」，古风线核心是「低饱和淡雅色调＋丰富发型三级锚定」。
@@ -93,19 +93,20 @@ character-asset-kit/
 │   ├── gates-g10-g14.md         #   微表情/机位视线/场景/风格变体/训练备料
 │   ├── prompt-framework.md      #   六段式提示词模板
 │   ├── prompt-rewrite-rules.md  #   实证改写规则（210 张实验）
-│   ├── bad-cases.md             #   崩图目录 BC-01…33
+│   ├── bad-cases.md             #   崩图目录 BC-01…42
 │   ├── acceptance-checklists.md #   逐门验收清单
 │   ├── registry-rules.md        #   台账 E/W 规则码
 │   ├── runtime-portability.md   #   跨模型/跨运行时移植与最小再验证
 │   └── style-profiles.md        #   怎么换画风/裁剪门
-├── profiles/                    # 风格 profile：gates-blindbox3d-v1（3D，默认）/ gates-realhuman-v1（真人写实）
+├── profiles/                    # 风格 profile：gates-blindbox3d-v1（3D，默认）/ gates-realhuman-v1（真人写实）/ gates-realhuman-gufeng-v1（中国古风）
 ├── evals/                       # L1 触发测试、L2 质量 A/B 任务与 rubric、统计脚本
 ├── templates/                   # 规格卡、资产清单、训练配置模板
 ├── scripts/                     # 确定性工序（Python 3.10+ / Pillow）
 │   ├── charkit/                 #   抠图、标准格、九种拼板、字体
 │   └── bin/                     #   init / generate / standard_cell / colorkey_cutout /
 │                                #   build_board / asset_index / scene_board /
-│                                #   style_board / trainset / secret_scan（+ subjectmask.swift）
+│                                #   style_board / trainset / secret_scan /
+│                                #   check_consistency（+ subjectmask.swift）
 ├── tests/                       # 纯标准库 unittest（不联网、不依赖 macOS Vision）
 ├── examples/                    # 脱敏的端到端走查
 └── docs/                        # PRD / DESIGN（SDD）/ DOGFOODING

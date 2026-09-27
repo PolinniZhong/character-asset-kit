@@ -7,7 +7,7 @@
 
 - 要做**真人写实/摄影质感**角色（都市剧、短剧真人卡、写实数字人参考）时选它；
 - 要做 3D 卡通/盲盒/黏土/2D 时用 blindbox3d 或其 style_slots；
-- 两条线是**同一 Skill 的两个 profile，不是两个 Skill**。
+- 三条线（3D 盲盒 / 真人写实 / 中国古风）是**同一 Skill 的三个 profile，不是三个 Skill**；古风 profile 见 `profile-gufeng.md`。
 
 ## 2. 与 blindbox3d 的差异速查
 

@@ -19,7 +19,7 @@ references/              # 方法论大脑（Markdown，Agent 按需读）
   gates-g10-g14.md       #   扩展门：微表情矩阵/机位视线/场景/风格变体/训练备料
   prompt-framework.md    #   六段式提示词模板
   prompt-rewrite-rules.md#   实证改写规则（210 张受控实验）
-  bad-cases.md           #   崩图目录 BC-01…33：现象/根因/修法
+  bad-cases.md           #   崩图目录 BC-01…42：现象/根因/修法
   acceptance-checklists.md # 逐门验收清单
   registry-rules.md      # 台账 E/W 规则码
   runtime-portability.md # 多运行时生图（v1.2）：提供商矩阵/最小再验证
@@ -29,7 +29,8 @@ templates/               # 规格卡 / 资产清单 / trainset config 模板
 scripts/
   charkit/               # 库：assets（抠图/落格）· board（画布/字体）· boards（九种板）· fonts
   bin/                   # CLI：init / standard_cell / colorkey_cutout / build_board /
-                         #      asset_index / scene_board / style_board / trainset / generate
+                         #      asset_index / scene_board / style_board / trainset /
+                         #      generate / secret_scan / check_consistency
   bin/subjectmask.swift  # macOS Vision 抠图源码（init 时 swiftc 现编译，不发二进制）
 examples/                # 走通门径的脱敏示例说明
 tests/                   # 纯标准库 unittest（不依赖网络、不依赖 macOS Vision）
